@@ -20,6 +20,7 @@ namespace Code.Configs
             public AnimState Track;
             public List<Sprite> Sprites = new List<Sprite>();
             public float AnimationSpeed = 10;
+            public bool Loop = true;
         }
 
         public List<SpriteSequence> Sequences = new List<SpriteSequence>();

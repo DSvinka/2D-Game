@@ -4,8 +4,6 @@ using Code.Input.Inputs;
 using Code.Interfaces.Controllers;
 using Code.Interfaces.Input;
 using Code.Models;
-using Code.Utils.Extensions;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Code.Controllers
@@ -61,12 +59,12 @@ namespace Code.Controllers
         
         public void Update(float deltaTime) 
         {
-            Move();
+            MoveTowards();
             Jump();
             Animate();
         }
 
-        private void Move()
+        private void MoveTowards()
         {
             _player.Rigidbody.velocity = new Vector2(_movementInput * _config.SpeedWalk, _player.Rigidbody.velocity.y);
         }
@@ -107,7 +105,7 @@ namespace Code.Controllers
             else
                 animState = AnimState.Idle;
                 
-            _spriteAnimatorController.StartAnimation(_player.SpriteRenderer, _config.SpriteAnimatorCfg, animState, true);
+            _spriteAnimatorController.StartAnimation(_player.SpriteRenderer, _config.SpriteAnimatorCfg, animState);
         }
     }
 }

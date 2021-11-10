@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-namespace Code.Utils.Extensions
+namespace Code.Utils
 {
     public static class Methods
     {
@@ -111,30 +111,6 @@ namespace Code.Utils.Extensions
         {
             var val = list[UnityEngine.Random.Range(0, list.Count)];
             return val;
-        }
-
-        public static Vector3 UpdateX(this Vector3 vector, float value)
-        {
-            vector = new Vector3(value, vector.y, vector.z);
-            return vector;
-        }
-
-        public static Vector3 UpdateY(this Vector3 vector, float value)
-        {
-            vector = new Vector3(vector.x, value, vector.z);
-            return vector;
-        }
-
-        public static Vector3 UpdateZ(this Vector3 vector, float value)
-        {
-            vector = new Vector3(vector.x, vector.y, value);
-            return vector;
-        }
-        
-        public static Vector3 UpdateAll(this Vector3 vector, float value)
-        {
-            vector = new Vector3(vector.x * value, vector.y * value, vector.z * value);
-            return vector;
         }
 
         public static Color SetColorAlpha(this Color c, float alpha)

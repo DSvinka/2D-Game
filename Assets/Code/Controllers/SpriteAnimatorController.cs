@@ -38,12 +38,11 @@ namespace Code.Controllers
         
         private Dictionary<SpriteRenderer, Animation> _activeAnimation = new Dictionary<SpriteRenderer, Animation>();
 
-        public void StartAnimation(SpriteRenderer spriteRenderer, SpriteAnimatorConfig config, AnimState track, bool loop)
+        public void StartAnimation(SpriteRenderer spriteRenderer, SpriteAnimatorConfig config, AnimState track)
         {
             if (_activeAnimation.TryGetValue(spriteRenderer, out var animation))
             {
                 animation.Sleep = false;
-                animation.Loop = loop;
 
                 if (animation.Track != track)
                 {
@@ -52,6 +51,7 @@ namespace Code.Controllers
                     animation.Track = track;
                     animation.Sprites = sequences.Sprites;
                     animation.Speed = sequences.AnimationSpeed;
+                    animation.Loop = sequences.Loop;
                     animation.Counter = 0;
                 }
             }
@@ -62,8 +62,8 @@ namespace Code.Controllers
                 _activeAnimation.Add(spriteRenderer, new Animation()
                 {
                     Sleep = false,
-                    Loop = loop,
                     Speed = sequences.AnimationSpeed,
+                    Loop = sequences.Loop,
                     Track = track,
                     Sprites = sequences.Sprites,
                 });

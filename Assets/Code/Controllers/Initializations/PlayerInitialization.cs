@@ -2,7 +2,7 @@
 using Code.Configs;
 using Code.Factory;
 using Code.Models;
-using Code.Utils.Extensions;
+using Code.Utils;
 using UnityEngine;
 
 namespace Code.Controllers.Initializations
@@ -48,7 +48,7 @@ namespace Code.Controllers.Initializations
             
             var scale = _player.Transform.localScale;
             playerModel.RightScale = scale;
-            playerModel.LeftScale = scale.UpdateX(-scale.x);
+            playerModel.LeftScale = scale.Change(x: -scale.x);
         }
 
         public PlayerModel GetPlayer()
