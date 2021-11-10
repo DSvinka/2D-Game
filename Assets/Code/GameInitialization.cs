@@ -24,8 +24,9 @@ namespace Code
             var inputController = new InputController();
             var spriteAnimatorController = new SpriteAnimatorController();
             var playerController = new PlayerController(playerInitialization, config.PlayerCfg);
-            var playerMovementController = new PlayerMovementController(playerInitialization, spriteAnimatorController, config.PlayerCfg);
-            
+            var playerMovementController = new PlayerMovementControllerNotPhysic(playerInitialization, config.PlayerCfg, spriteAnimatorController); 
+            //new PlayerMovementController(playerInitialization, spriteAnimatorController, config.PlayerCfg);
+
             _controllers.Add(inputController);
             
             _controllers.Add(playerController);

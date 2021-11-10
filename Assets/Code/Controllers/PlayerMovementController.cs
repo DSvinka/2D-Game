@@ -4,6 +4,7 @@ using Code.Input.Inputs;
 using Code.Interfaces.Controllers;
 using Code.Interfaces.Input;
 using Code.Models;
+using Code.Utils;
 using UnityEngine;
 
 namespace Code.Controllers
@@ -15,25 +16,25 @@ namespace Code.Controllers
         private readonly PlayerConfig _config;
         private PlayerModel _player;
 
-        private float _movementInput;
-        private bool _jumpInput;
-
         public PlayerMovementController(PlayerInitialization playerInitialization, SpriteAnimatorController spriteAnimatorController, PlayerConfig playerConfig)
         {
             _playerInitialization = playerInitialization;
             _spriteAnimatorController = spriteAnimatorController;
             _config = playerConfig;
            
-            _movementInputProxy = AxisInput.Horizontal;
+            _axisXInputProxy = AxisInput.Horizontal;
             _jumpInputProxy = KeysInput.Jump;
         }
 
-        #region Input Proxy
+        #region Input
+        
+        private float _axisXInput;
+        private bool _jumpInput;
 
-        private IUserAxisProxy _movementInputProxy;
+        private IUserAxisProxy _axisXInputProxy;
         private IUserKeyDownProxy _jumpInputProxy;
 
-        private void OnMovementHorizontalInput(float value) => _movementInput = value;
+        private void OnAxisXInput(float value) => _axisXInput = value;
         private void OnJumpInput(bool value) => _jumpInput = value;
 
         #endregion
@@ -42,16 +43,13 @@ namespace Code.Controllers
         {
             _player = _playerInitialization.GetPlayer();
 
-            _movementInputProxy.AxisOnChange += OnMovementHorizontalInput;
+            _axisXInputProxy.AxisOnChange += OnAxisXInput;
             _jumpInputProxy.KeyOnDown += OnJumpInput;
-
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
 
         public void Cleanup()
         {
-            _movementInputProxy.AxisOnChange -= OnMovementHorizontalInput;
+            _axisXInputProxy.AxisOnChange -= OnAxisXInput;
             _jumpInputProxy.KeyOnDown -= OnJumpInput;
             
             _spriteAnimatorController.StopAnimation(_player.SpriteRenderer);
@@ -66,18 +64,18 @@ namespace Code.Controllers
 
         private void MoveTowards()
         {
-            _player.Rigidbody.velocity = new Vector2(_movementInput * _config.SpeedWalk, _player.Rigidbody.velocity.y);
+            _player.Rigidbody.velocity = _player.Rigidbody.velocity.Change(x: _axisXInput * _config.SpeedWalk);
         }
 
         private void Jump()
         {
             if (_jumpInput && _player.IsGrounded) 
             {
-                _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, _config.JumpForce);
+                _player.Rigidbody.velocity = _player.Rigidbody.velocity.Change(y: _config.JumpForce);
                 _player.IsGrounded = false;
             }
             
-            if (_player.Rigidbody.velocity.y == 0)
+            if (Mathf.Abs(_player.Rigidbody.velocity.y) <= _config.JumpTreshold)
             {
                 _player.IsGrounded = true;
             }
@@ -85,22 +83,21 @@ namespace Code.Controllers
 
         private void Animate()
         {
-            if (_movementInput < 0 && !_player.LeftTurn)
+            if (_axisXInput < 0 && !_player.LeftTurn)
             {
                 _player.Transform.localScale = _player.LeftScale;
                 _player.LeftTurn = true;
             }
-            else if (_movementInput > 0 && _player.LeftTurn)
+            else if (_axisXInput > 0 && _player.LeftTurn)
             {
                 _player.Transform.localScale = _player.RightScale;
                 _player.LeftTurn = false;
             }
             
             AnimState animState;
-
             if (!_player.IsGrounded)
                 animState = AnimState.Jump;
-            else if (_player.Rigidbody.velocity.x > 0 || _player.Rigidbody.velocity.x < 0)
+            else if (Mathf.Abs(_player.Rigidbody.velocity.x) > 0)
                 animState = AnimState.Run;
             else
                 animState = AnimState.Idle;
