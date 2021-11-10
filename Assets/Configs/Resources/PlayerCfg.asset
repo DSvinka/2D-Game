@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4d5dff68774a6aa91f8cb8c454e3b1, type: 3}
   m_Name: PlayerCfg
   m_EditorClassIdentifier: 
-  _prefabPath: Assets/Prefabs/Player.prefab
+  _prefabPath: Assets/Prefabs/Player NonPhysic.prefab
   _spriteAnimatorCfgPath: Assets/Configs/Resources/PlayerAnimCfg.asset
   _maxHealth: 25
   _jumpForce: 5
+  _jumpTreshold: 0.01
   _speedWalk: 5
