@@ -1,5 +1,4 @@
 using Code.Input.Inputs;
-using Code.Interfaces;
 using Code.Interfaces.Controllers;
 
 namespace Code.Controllers
@@ -13,9 +12,6 @@ namespace Code.Controllers
             KeysInput.Escape.GetKeyDown();
             KeysInput.Jump.GetKeyDown();
             KeysInput.Run.GetKey();
-
-            
-            
         }
     }
 }

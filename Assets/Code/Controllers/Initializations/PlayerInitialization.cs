@@ -13,6 +13,7 @@ namespace Code.Controllers.Initializations
         private readonly PlayerConfig _config;
         
         private PlayerModel _player;
+        private CameraModel _camera;
 
         public PlayerInitialization(PlayerConfig config, PlayerFactory playerFactory)
         {
@@ -49,11 +50,27 @@ namespace Code.Controllers.Initializations
             var scale = _player.Transform.localScale;
             playerModel.RightScale = scale;
             playerModel.LeftScale = scale.Change(x: -scale.x);
+
+            var camera = _playerFactory.CreateCamera();
+            var cameraModel = new CameraModel()
+            {
+                Camera = camera,
+                GameObject = camera.gameObject,
+                Transform = camera.transform,
+            };
+            _camera = cameraModel;
+            _camera.Transform.SetParent(null);
+            _camera.Transform.position = _camera.Transform.position.Change(z: _config.CameraDistance);
         }
 
         public PlayerModel GetPlayer()
         {
             return _player;
+        }
+        
+        public CameraModel GetCamera()
+        {
+            return _camera;
         }
     }
 }

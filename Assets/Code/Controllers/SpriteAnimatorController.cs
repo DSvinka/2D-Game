@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Code.Configs;
 using Code.Interfaces.Controllers;
+using Code.Managers;
 using UnityEngine;
 
 namespace Code.Controllers
@@ -77,7 +78,7 @@ namespace Code.Controllers
                 _activeAnimation.Remove(spriteRenderer);
             }
         }
-        
+
         public void Update(float deltaTime)
         {
             foreach (var animation in _activeAnimation)
