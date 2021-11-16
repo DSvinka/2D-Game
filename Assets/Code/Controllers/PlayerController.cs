@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Controllers
 {
-    internal sealed class PlayerController: IController, IStart
+    internal sealed class PlayerController: IController, IStart, ICleanup
     {
         private readonly PlayerInitialization _initialization;
         private PlayerConfig _config;
@@ -34,6 +34,7 @@ namespace Code.Controllers
             {
                 view.OnHealing -= AddHealth;
                 view.OnDamage -= AddDamage;
+                Object.Destroy(view);
             }
         }
 

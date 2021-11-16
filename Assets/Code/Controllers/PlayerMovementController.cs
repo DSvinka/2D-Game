@@ -3,8 +3,10 @@ using Code.Controllers.Initializations;
 using Code.Input.Inputs;
 using Code.Interfaces.Controllers;
 using Code.Interfaces.Input;
+using Code.Managers;
 using Code.Models;
 using Code.Utils;
+using Code.Utils.Modules;
 using UnityEngine;
 
 namespace Code.Controllers
@@ -14,7 +16,10 @@ namespace Code.Controllers
         private readonly PlayerInitialization _playerInitialization;
         private readonly SpriteAnimatorController _spriteAnimatorController;
         private readonly PlayerConfig _config;
+        private ContactPooler _contactPooler;
         private PlayerModel _player;
+
+        private float _xVelocity;
 
         public PlayerMovementController(PlayerInitialization playerInitialization, SpriteAnimatorController spriteAnimatorController, PlayerConfig playerConfig)
         {
@@ -42,6 +47,7 @@ namespace Code.Controllers
         public void Start()
         {
             _player = _playerInitialization.GetPlayer();
+            _contactPooler = new ContactPooler(_player.Collider);
 
             _axisXInputProxy.AxisOnChange += OnAxisXInput;
             _jumpInputProxy.KeyOnDown += OnJumpInput;
@@ -57,6 +63,8 @@ namespace Code.Controllers
         
         public void Update(float deltaTime) 
         {
+            _contactPooler.Update(deltaTime);
+            
             MoveTowards();
             Jump();
             Animate();
@@ -64,7 +72,8 @@ namespace Code.Controllers
 
         private void MoveTowards()
         {
-            _player.Rigidbody.velocity = _player.Rigidbody.velocity.Change(x: _axisXInput * _config.SpeedWalk);
+            _xVelocity = _config.SpeedWalk * _axisXInput;
+            _player.Rigidbody.velocity = _player.Rigidbody.velocity.Change(x: _xVelocity);
         }
 
         private void Jump()
@@ -72,32 +81,36 @@ namespace Code.Controllers
             if (_jumpInput && _player.IsGrounded) 
             {
                 _player.Rigidbody.velocity = _player.Rigidbody.velocity.Change(y: _config.JumpForce);
-                _player.IsGrounded = false;
             }
             
             if (Mathf.Abs(_player.Rigidbody.velocity.y) <= _config.JumpTreshold)
             {
                 _player.IsGrounded = true;
             }
+
+            if (Mathf.Abs(_player.Rigidbody.velocity.y) >= _config.FallingVelocity)
+            {
+                _player.IsGrounded = false;
+            }
         }
 
         private void Animate()
         {
-            if (_axisXInput < 0 && !_player.LeftTurn)
+            if (_xVelocity < 0 && !_player.LeftTurn)
             {
                 _player.Transform.localScale = _player.LeftScale;
                 _player.LeftTurn = true;
             }
-            else if (_axisXInput > 0 && _player.LeftTurn)
+            else if (_xVelocity > 0 && _player.LeftTurn)
             {
                 _player.Transform.localScale = _player.RightScale;
                 _player.LeftTurn = false;
             }
-            
+
             AnimState animState;
             if (!_player.IsGrounded)
                 animState = AnimState.Jump;
-            else if (Mathf.Abs(_player.Rigidbody.velocity.x) > 0)
+            else if ((_xVelocity < -_config.MovementTreshold && !_contactPooler.HasLeftContact) || (_xVelocity > _config.MovementTreshold && !_contactPooler.HasRightContact))
                 animState = AnimState.Run;
             else
                 animState = AnimState.Idle;

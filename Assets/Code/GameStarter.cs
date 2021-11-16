@@ -1,6 +1,4 @@
 using Code.Configs;
-using Code.Controllers;
-using Code.Views;
 using UnityEngine;
 
 namespace Code

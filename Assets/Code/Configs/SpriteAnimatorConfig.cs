@@ -1,16 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Code.Managers;
 using UnityEngine;
 
 namespace Code.Configs
 {
-    public enum AnimState
-    {
-        Idle = 0,
-        Run = 1,
-        Jump = 2,
-    }
-    
     [CreateAssetMenu(fileName = "SpriteAnimatorCfg", menuName = "Configs/Animation Cfg", order = 2)]
     internal class SpriteAnimatorConfig : ScriptableObject
     {

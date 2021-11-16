@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 255565435184006588}
+  - component: {fileID: 7917214077790457387}
+  - component: {fileID: 6650303702790458460}
   m_Layer: 3
   m_Name: Platform
   m_TagString: Untagged
@@ -33,6 +35,83 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &7917214077790457387
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255565435184006591}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!66 &6650303702790458460
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255565435184006591}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: ee663c9a7d6bc3e48b72d86e19d391c7, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 3673915150773555141}
+    m_ColliderPaths:
+    - - X: 14999707
+        Y: -5000000
+      - X: 14999707
+        Y: 5000000
+      - X: 5000000
+        Y: 4999707
+      - X: 5000293
+        Y: -5000000
+  - m_Collider: {fileID: 5078319885670480242}
+    m_ColliderPaths:
+    - - X: -5000293
+        Y: -5000000
+      - X: -5000293
+        Y: 5000000
+      - X: -15000000
+        Y: 4999707
+      - X: -14999707
+        Y: -5000000
+  - m_Collider: {fileID: 8004888852783557459}
+    m_ColliderPaths:
+    - - X: 4999707
+        Y: -5000000
+      - X: 4999707
+        Y: 5000000
+      - X: -5000000
+        Y: 4999707
+      - X: -4999707
+        Y: -5000000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: -1.4999707, y: -0.4999707}
+      - {x: 1.4999707, y: -0.4999707}
+      - {x: 1.4999415, y: 0.5}
+      - {x: -1.5, y: 0.4999414}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
 --- !u!1001 &5063920098518033809
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -88,11 +167,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrassCliffRight
       objectReference: {fileID: 0}
+    - target: {fileID: 7673290690629848793, guid: d3aa7de8a3cec444d81729475dfe0ca9, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3aa7de8a3cec444d81729475dfe0ca9, type: 3}
 --- !u!4 &8399315463246875375 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3663384274081836926, guid: d3aa7de8a3cec444d81729475dfe0ca9, type: 3}
+  m_PrefabInstance: {fileID: 5063920098518033809}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &3673915150773555141 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8411305883109714516, guid: d3aa7de8a3cec444d81729475dfe0ca9, type: 3}
   m_PrefabInstance: {fileID: 5063920098518033809}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6610580523215619616
@@ -150,11 +238,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8617723929905260264, guid: 2dcf1e3420096304587472fd12a89f27, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2dcf1e3420096304587472fd12a89f27, type: 3}
 --- !u!4 &1561279796163322734 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5627168870078686542, guid: 2dcf1e3420096304587472fd12a89f27, type: 3}
+  m_PrefabInstance: {fileID: 6610580523215619616}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &5078319885670480242 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 2145031674999799634, guid: 2dcf1e3420096304587472fd12a89f27, type: 3}
   m_PrefabInstance: {fileID: 6610580523215619616}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8243867921943899024
@@ -208,6 +305,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6680315397670099288, guid: c805a5b02a7060e418c98d982ca0abaa, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8833568808271400916, guid: c805a5b02a7060e418c98d982ca0abaa, type: 3}
       propertyPath: m_Name
       value: GrassCliffMid
@@ -217,5 +318,10 @@ PrefabInstance:
 --- !u!4 &6931831835294280710 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1322591961227560854, guid: c805a5b02a7060e418c98d982ca0abaa, type: 3}
+  m_PrefabInstance: {fileID: 8243867921943899024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &8004888852783557459 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 2125428327598637251, guid: c805a5b02a7060e418c98d982ca0abaa, type: 3}
   m_PrefabInstance: {fileID: 8243867921943899024}
   m_PrefabAsset: {fileID: 0}

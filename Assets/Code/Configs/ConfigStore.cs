@@ -1,5 +1,4 @@
-﻿using Code.Views;
-using UnityEngine;
+﻿using UnityEngine;
 using static Code.Utils.DataUtils;
 
 namespace Code.Configs
