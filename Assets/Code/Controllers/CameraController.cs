@@ -9,8 +9,9 @@ namespace Code.Controllers
 {
     internal sealed class CameraController: IController, IUpdate, IStart, ICleanup
     {
-        private readonly PlayerInitialization _playerInitialization;
-        private readonly PlayerConfig _config;
+        private PlayerInitialization _playerInitialization;
+        private PlayerConfig _config;
+        
         private PlayerModel _player;
         private CameraModel _camera;
 
@@ -18,6 +19,14 @@ namespace Code.Controllers
         {
             _playerInitialization = playerInitialization;
             _config = config;
+        }
+
+        public void ReSetup(PlayerInitialization playerInitialization, PlayerConfig config)
+        {
+            _playerInitialization = playerInitialization;
+            _config = config;
+
+            Start();
         }
         
         public void Start()

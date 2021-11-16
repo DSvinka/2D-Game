@@ -8,19 +8,31 @@ namespace Code.Controllers
 {
     internal sealed class PlayerController: IController, IStart, ICleanup
     {
-        private readonly PlayerInitialization _initialization;
+        private PlayerInitialization _playerInitialization;
         private PlayerConfig _config;
         private PlayerModel _player;
 
-        public PlayerController(PlayerInitialization playerInitialization, PlayerConfig playerConfig)
+        public PlayerController(PlayerInitialization playerPlayerInitialization, PlayerConfig playerConfig)
         {
-            _initialization = playerInitialization;
+            Setup(playerPlayerInitialization, playerConfig);
+        }
+        
+        public void ReSetup(PlayerInitialization playerInitialization, PlayerConfig playerConfig)
+        {
+            Cleanup();
+            Setup(playerInitialization, playerConfig);
+            Start();
+        }
+        
+        private void Setup(PlayerInitialization playerInitialization, PlayerConfig playerConfig)
+        {
+            _playerInitialization = playerInitialization;
             _config = playerConfig;
         }
         
         public void Start()
         {
-            _player = _initialization.GetPlayer();
+            _player = _playerInitialization.GetPlayer();
 
             var view = _player.View;
             view.OnHealing += AddHealth;

@@ -12,9 +12,6 @@ namespace Code.Controllers
             KeysInput.Escape.GetKeyDown();
             KeysInput.Jump.GetKeyDown();
             KeysInput.Run.GetKey();
-
-            
-            
         }
     }
 }

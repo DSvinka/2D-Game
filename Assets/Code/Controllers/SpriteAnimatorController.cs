@@ -78,7 +78,7 @@ namespace Code.Controllers
                 _activeAnimation.Remove(spriteRenderer);
             }
         }
-        
+
         public void Update(float deltaTime)
         {
             foreach (var animation in _activeAnimation)

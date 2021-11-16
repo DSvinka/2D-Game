@@ -13,9 +13,10 @@ namespace Code.Controllers
 {
     internal sealed class PlayerMovementController: IController, IUpdate, ICleanup, IStart
     {
-        private readonly PlayerInitialization _playerInitialization;
-        private readonly SpriteAnimatorController _spriteAnimatorController;
-        private readonly PlayerConfig _config;
+        private PlayerInitialization _playerInitialization;
+        private SpriteAnimatorController _spriteAnimatorController;
+        private PlayerConfig _config;
+        
         private ContactPooler _contactPooler;
         private PlayerModel _player;
 
@@ -23,10 +24,7 @@ namespace Code.Controllers
 
         public PlayerMovementController(PlayerInitialization playerInitialization, SpriteAnimatorController spriteAnimatorController, PlayerConfig playerConfig)
         {
-            _playerInitialization = playerInitialization;
-            _spriteAnimatorController = spriteAnimatorController;
-            _config = playerConfig;
-           
+            Setup(playerInitialization, spriteAnimatorController, playerConfig);
             _axisXInputProxy = AxisInput.Horizontal;
             _jumpInputProxy = KeysInput.Jump;
         }
@@ -44,6 +42,20 @@ namespace Code.Controllers
 
         #endregion
 
+        public void ReSetup(PlayerInitialization playerInitialization, SpriteAnimatorController spriteAnimatorController, PlayerConfig playerConfig)
+        {
+            Cleanup();
+            Setup(playerInitialization, spriteAnimatorController, playerConfig);
+            Start();
+        }
+        
+        private void Setup(PlayerInitialization playerInitialization, SpriteAnimatorController spriteAnimatorController, PlayerConfig playerConfig)
+        {
+            _playerInitialization = playerInitialization;
+            _spriteAnimatorController = spriteAnimatorController;
+            _config = playerConfig;
+        }
+        
         public void Start()
         {
             _player = _playerInitialization.GetPlayer();
