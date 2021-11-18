@@ -3,7 +3,7 @@ using static Code.Utils.DataUtils;
 
 namespace Code.Configs
 {
-    [CreateAssetMenu(fileName = "PlayerCfg", menuName = "Configs/Player Cfg", order = 0)]
+    [CreateAssetMenu(fileName = "PlayerCfg", menuName = "Configs/Player Cfg", order = 1)]
     internal sealed class PlayerConfig : ScriptableObject
     {
         [SerializeField] [AssetPath.Attribute(typeof(GameObject))] 

@@ -7,13 +7,13 @@ using UnityEngine;
 
 namespace Code.Controllers
 {
-    internal sealed class LevelChangersController: IController, IStart, ICleanup
+    internal sealed class LevelChangerController: IController, IStart, ICleanup
     {
-        private readonly Dictionary<int, LevelChangerView> _locationChanges;
+        private readonly Dictionary<int, LevelChangerView> _levelChangers;
 
-        public LevelChangersController(IEnumerable<LevelChangerView> levelChangersViews)
+        public LevelChangerController(IEnumerable<LevelChangerView> levelChangersViews)
         {
-            _locationChanges = new Dictionary<int, LevelChangerView>();
+            _levelChangers = new Dictionary<int, LevelChangerView>();
             Setup(levelChangersViews);
         }
         
@@ -21,7 +21,7 @@ namespace Code.Controllers
         {
             foreach (var changer in levelChangersViews)
             {
-                _locationChanges.Add(changer.gameObject.GetInstanceID(), changer);
+                _levelChangers.Add(changer.gameObject.GetInstanceID(), changer);
             }
         }
 
@@ -34,7 +34,7 @@ namespace Code.Controllers
 
         public void Start()
         {
-            foreach (var changer in _locationChanges)
+            foreach (var changer in _levelChangers)
             {
                 switch (changer.Value.TriggerType)
                 {
@@ -49,7 +49,7 @@ namespace Code.Controllers
 
         public void Cleanup()
         {
-            foreach (var changer in _locationChanges)
+            foreach (var changer in _levelChangers)
             {
                 switch (changer.Value.TriggerType)
                 {
@@ -60,7 +60,7 @@ namespace Code.Controllers
                         throw new ArgumentOutOfRangeException($"{changer.Value.TriggerType} не предусмотрен в этом коде");
                 };
             }
-            _locationChanges.Clear();
+            _levelChangers.Clear();
         }
 
         private void OnTriggerEnter(GameObject gameObject, int triggerID)

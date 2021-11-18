@@ -24,7 +24,12 @@ namespace Code.Controllers
 
         public PlayerMovementController(PlayerInitialization playerInitialization, SpriteAnimatorController spriteAnimatorController, PlayerConfig playerConfig)
         {
-            Setup(playerInitialization, spriteAnimatorController, playerConfig);
+            _playerInitialization = playerInitialization;
+            _spriteAnimatorController = spriteAnimatorController;
+            _config = playerConfig;
+            
+            Setup();
+            
             _axisXInputProxy = AxisInput.Horizontal;
             _jumpInputProxy = KeysInput.Jump;
         }
@@ -42,18 +47,16 @@ namespace Code.Controllers
 
         #endregion
 
-        public void ReSetup(PlayerInitialization playerInitialization, SpriteAnimatorController spriteAnimatorController, PlayerConfig playerConfig)
+        public void ReSetup()
         {
             Cleanup();
-            Setup(playerInitialization, spriteAnimatorController, playerConfig);
+            Setup();
             Start();
         }
         
-        private void Setup(PlayerInitialization playerInitialization, SpriteAnimatorController spriteAnimatorController, PlayerConfig playerConfig)
+        private void Setup()
         {
-            _playerInitialization = playerInitialization;
-            _spriteAnimatorController = spriteAnimatorController;
-            _config = playerConfig;
+            
         }
         
         public void Start()

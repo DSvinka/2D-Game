@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e49a158b629c44729ac4aead921b5455, type: 3}
   m_Name: ConfigStore
   m_EditorClassIdentifier: 
-  _playerAnimatorCfgPath: Assets/Configs/Resources/PlayerAnimCfg.asset
   _playerCfgPath: Assets/Configs/Resources/PlayerCfg.asset
+  _bulletCfgPath: Assets/Configs/Resources/BulletCfg.asset
+  _coinAnimCfgPath: Assets/Configs/Resources/CoinAnimCfg.asset

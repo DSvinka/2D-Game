@@ -23,9 +23,7 @@ namespace Code.Controllers
 
         public void ReSetup(PlayerInitialization playerInitialization, PlayerConfig config)
         {
-            _playerInitialization = playerInitialization;
-            _config = config;
-
+            Cleanup();
             Start();
         }
         
@@ -46,7 +44,8 @@ namespace Code.Controllers
 
         public void Cleanup()
         {
-            Object.Destroy(_camera.GameObject);
+            if (_camera.GameObject != null)
+                Object.Destroy(_camera.GameObject);
         }
     }
 }

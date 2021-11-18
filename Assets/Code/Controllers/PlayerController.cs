@@ -1,8 +1,11 @@
-﻿using Code.Configs;
+﻿using System;
+using Code.Configs;
 using Code.Controllers.Initializations;
 using Code.Interfaces.Controllers;
+using Code.Managers;
 using Code.Models;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
@@ -12,22 +15,16 @@ namespace Code.Controllers
         private PlayerConfig _config;
         private PlayerModel _player;
 
-        public PlayerController(PlayerInitialization playerPlayerInitialization, PlayerConfig playerConfig)
-        {
-            Setup(playerPlayerInitialization, playerConfig);
-        }
-        
-        public void ReSetup(PlayerInitialization playerInitialization, PlayerConfig playerConfig)
-        {
-            Cleanup();
-            Setup(playerInitialization, playerConfig);
-            Start();
-        }
-        
-        private void Setup(PlayerInitialization playerInitialization, PlayerConfig playerConfig)
+        public PlayerController(PlayerInitialization playerInitialization, PlayerConfig playerConfig)
         {
             _playerInitialization = playerInitialization;
             _config = playerConfig;
+        }
+        
+        public void ReSetup()
+        {
+            Cleanup();
+            Start();
         }
         
         public void Start()
@@ -37,6 +34,7 @@ namespace Code.Controllers
             var view = _player.View;
             view.OnHealing += AddHealth;
             view.OnDamage += AddDamage;
+            view.OnPickup += Pickup;
         }
 
         public void Cleanup()
@@ -46,6 +44,7 @@ namespace Code.Controllers
             {
                 view.OnHealing -= AddHealth;
                 view.OnDamage -= AddDamage;
+                view.OnPickup -= Pickup;
                 Object.Destroy(view);
             }
         }
@@ -66,7 +65,19 @@ namespace Code.Controllers
                 Death();
             }
         }
-        
+
+        private void Pickup(GameObject item, int _, PickupManager pickupType)
+        {
+            switch (pickupType)
+            {
+                case PickupManager.Coin:
+                    _player.Coins += 1;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"{pickupType} не поддерживается в этом коде.");
+            }
+        }
+
         private void Death()
         {
             // TODO: Сделать нормальную смерть
