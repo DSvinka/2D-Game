@@ -7,6 +7,8 @@ namespace Code.Models
     internal sealed class PlayerModel: IUnit
     {
         public float Health { get; set; }
+        public int Coins { get; set; }
+        
         public bool IsGrounded { get; set; }
         public bool LeftTurn { get; set; }
         

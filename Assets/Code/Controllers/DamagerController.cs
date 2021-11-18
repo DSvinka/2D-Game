@@ -9,11 +9,11 @@ using UnityEngine;
 
 namespace Code.Controllers
 {
-    internal sealed class DamagersController: IController, IStart, ICleanup, IUpdate
+    internal sealed class DamagerController: IController, IStart, ICleanup, IUpdate
     {
         private readonly Dictionary<int, DamagerModel> _damagers;
 
-        public DamagersController(IEnumerable<DamagerView> trapViews)
+        public DamagerController(IEnumerable<DamagerView> trapViews)
         {
             _damagers = new Dictionary<int, DamagerModel>();
             Setup(trapViews);

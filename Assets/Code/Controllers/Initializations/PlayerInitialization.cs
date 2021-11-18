@@ -4,6 +4,7 @@ using Code.Factory;
 using Code.Models;
 using Code.Utils;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Code.Controllers.Initializations
 {
@@ -23,6 +24,12 @@ namespace Code.Controllers.Initializations
 
         public void Initialization()
         {
+            if (_player != null && _player.GameObject != null)
+                Object.Destroy(_player.GameObject);
+            
+            if (_camera != null && _camera.GameObject != null)
+                Object.Destroy(_camera.GameObject);
+            
             var view = _playerFactory.CreatePlayer();
             if (!view.TryGetComponent(out Collider2D collider))
                 throw new Exception("Компонент Collider2D не найден на объекте PlayerView");

@@ -92,6 +92,11 @@ namespace Code.Controllers
                 }
             }
         }
+
+        public void ReSetup()
+        {
+            Cleanup();
+        }
         
         public void Cleanup()
         {
