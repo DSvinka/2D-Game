@@ -31,6 +31,7 @@ namespace Code
         private BulletController _bulletController;
         private EmitterController<BulletController> _emitterController;
 
+        private EnemyController _enemyController;
         private DamagerController _damagerController;
         private CannonController _cannonController;
         private LevelChangerController _levelChangerController;
@@ -43,6 +44,7 @@ namespace Code
         private PoolService _poolService;
         
         // Views
+        private EnemyView[] _enemyViews;
         private DamagerView[] _damagerViews;
         private LevelChangerView[] _levelChangerViews;
         private EmitterView[] _emitterViews;
@@ -69,6 +71,7 @@ namespace Code
 
         private void FindGameObjects()
         {
+            _enemyViews = Object.FindObjectsOfType<EnemyView>();
             _damagerViews = Object.FindObjectsOfType<DamagerView>();
             _levelChangerViews = Object.FindObjectsOfType<LevelChangerView>();
             _emitterViews = Object.FindObjectsOfType<EmitterView>();
@@ -98,7 +101,8 @@ namespace Code
             
             _bulletController = new BulletController(_config.BulletCfg, _poolService);
             _emitterController = new EmitterController<BulletController>(_emitterViews, _bulletController, _poolService);
-            
+
+            _enemyController = new EnemyController(_playerInitialization, _enemyViews);
             _coinController = new CoinController(_coinViews, _spriteAnimatorController, _config.CoinAnimCfg);
             _cannonController = new CannonController(_playerInitialization, _cannonViews);
             _damagerController = new DamagerController(_damagerViews);
@@ -117,6 +121,7 @@ namespace Code
 
             _controllers.Add(_emitterController);
             
+            _controllers.Add(_enemyController);
             _controllers.Add(_coinController);
             _controllers.Add(_cannonController);
             _controllers.Add(_damagerController);
@@ -138,6 +143,7 @@ namespace Code
             _playerController.ReSetup();
             _playerMovementController.ReSetup();
             
+            _enemyController.ReSetup(_enemyViews);
             _coinController.ReSetup(_coinViews);
             _cannonController.ReSetup(_cannonViews);
             _emitterController.ReSetup(_emitterViews, _bulletController);

@@ -13,10 +13,10 @@ namespace Code.Controllers
     {
         private readonly Dictionary<int, DamagerModel> _damagers;
 
-        public DamagerController(IEnumerable<DamagerView> trapViews)
+        public DamagerController(IEnumerable<DamagerView> damagerViews)
         {
             _damagers = new Dictionary<int, DamagerModel>();
-            Setup(trapViews);
+            Setup(damagerViews);
         }
         
         private void Setup(IEnumerable<DamagerView> damagerViews)
@@ -60,7 +60,7 @@ namespace Code.Controllers
                         damager.Value.DamagerView.OnExit += OnTrapExit;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException($"{damager.Value.TriggerType} не предусмотрен в этом коде");
+                        throw new ArgumentOutOfRangeException(nameof(damager.Value.TriggerType), $"{damager.Value.TriggerType} не предусмотрен в этом коде");
                 };
             }
         }
@@ -81,7 +81,7 @@ namespace Code.Controllers
                         damager.Value.DamagerView.OnExit -= OnTrapExit;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException($"{damager.Value.TriggerType} не предусмотрен в этом коде");
+                        throw new ArgumentOutOfRangeException(nameof(damager.Value.TriggerType), $"{damager.Value.TriggerType} не предусмотрен в этом коде");
                 };
             }
             _damagers.Clear();

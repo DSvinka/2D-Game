@@ -15,7 +15,7 @@ MonoBehaviour:
   _playerPrefabPath: Assets/Prefabs/Player.prefab
   _cameraPrefabPath: Assets/Prefabs/Camera.prefab
   _spriteAnimatorCfgPath: Assets/Configs/Resources/PlayerAnimCfg.asset
-  _maxHealth: 30
+  _maxHealth: 500
   _jumpForce: 7
   _jumpTreshold: 0.01
   _movementTreshold: 0.01
