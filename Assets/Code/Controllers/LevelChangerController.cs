@@ -42,7 +42,7 @@ namespace Code.Controllers
                         changer.Value.OnEnter += OnTriggerEnter;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException($"{changer.Value.TriggerType} не предусмотрен в этом коде");
+                        throw new ArgumentOutOfRangeException(nameof(changer.Value.TriggerType), $"{changer.Value.TriggerType} не предусмотрен в этом коде");
                 };
             }
         }
@@ -57,7 +57,7 @@ namespace Code.Controllers
                         changer.Value.OnEnter += OnTriggerEnter;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException($"{changer.Value.TriggerType} не предусмотрен в этом коде");
+                        throw new ArgumentOutOfRangeException(nameof(changer.Value.TriggerType), $"{changer.Value.TriggerType} не предусмотрен в этом коде");
                 };
             }
             _levelChangers.Clear();

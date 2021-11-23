@@ -7,8 +7,8 @@ namespace Code.Views
 {
     internal sealed class DamagerView : MonoBehaviour, ITriggerView
     {
-        [SerializeField] private float _damage;
-        [SerializeField] private float _damageRate;
+        [SerializeField] private float _damage = 10f;
+        [SerializeField] private float _damageRate = 2f;
         [SerializeField] private TriggerManager _triggerType;
 
         public float Damage => _damage;

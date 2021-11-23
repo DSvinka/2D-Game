@@ -74,7 +74,7 @@ namespace Code.Controllers
                     _player.Coins += 1;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException($"{pickupType} не поддерживается в этом коде.");
+                    throw new ArgumentOutOfRangeException(nameof(pickupType), $"{pickupType} не поддерживается в этом коде.");
             }
         }
 
