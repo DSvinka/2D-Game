@@ -13,30 +13,29 @@ namespace Code
         private GameControllers _controllers;
         private ConfigStore _config;
 
-        // Factory
-        private PlayerFactory _playerFactory;
-        private HudFactory _hudFactory;
-        
-        // Services
-        private PoolService _poolService;
-
         public GameInitialization(GameControllers controllers, ConfigStore config)
         {
             _controllers = controllers;
             _config = config;
+        }
 
-            _playerFactory = new PlayerFactory(_config.PlayerCfg);
-            _hudFactory = new HudFactory(_config.HudCfg);
-            
-            _poolService = new PoolService();
+        public void Initialization()
+        {
+            var poolService = new PoolService();
             
             var sceneViews = FindGameObjects();
+            var sceneFactories = SetupFactories();
 
-            var sceneInitializations = SetupInitializations();
+            var sceneInitializations = SetupInitializations(sceneFactories);
             AddInitialization(sceneInitializations);
             
-            var sceneControllers = SetupControllers(sceneViews, sceneInitializations);
+            var sceneControllers = SetupControllers(sceneViews, sceneInitializations, poolService);
             AddControllers(sceneControllers);
+        }
+
+        public SceneViews GetSceneViews()
+        {
+            return FindGameObjects();
         }
 
         private SceneViews FindGameObjects()
@@ -53,39 +52,54 @@ namespace Code
             return sceneViews;
         }
 
-        private SceneInitializations SetupInitializations()
+        private SceneFactories SetupFactories()
+        {
+            var sceneFactories = new SceneFactories();
+            
+            sceneFactories.HudFactory = new HudFactory(_config.HudCfg);
+            sceneFactories.PlayerFactory = new PlayerFactory(_config.PlayerCfg);
+            sceneFactories.LevelFactory = new LevelFactory(_config.LevelCfg);
+
+            return sceneFactories;
+        }
+
+        private SceneInitializations SetupInitializations(SceneFactories sceneFactories)
         {
             var sceneInitializations = new SceneInitializations();
             
             sceneInitializations.InputInitialization = new InputInitialization();
-            sceneInitializations.PlayerInitialization = new PlayerInitialization(_config.PlayerCfg, _playerFactory);
-            sceneInitializations.HudInitialization = new HudInitialization(_config.HudCfg, _hudFactory);
+            sceneInitializations.PlayerInitialization = new PlayerInitialization(_config.PlayerCfg, sceneFactories.PlayerFactory);
+            sceneInitializations.HudInitialization = new HudInitialization(sceneFactories.HudFactory);
+            sceneInitializations.LevelInitialization = new LevelInitialization(sceneFactories.LevelFactory);
 
             return sceneInitializations;
         }
 
-        private SceneControllers SetupControllers(SceneViews sceneViews, SceneInitializations sceneInitializations)
+        private SceneControllers SetupControllers(SceneViews sceneViews, SceneInitializations sceneInitializations, PoolService poolService)
         {
             var sceneControllers = new SceneControllers();
-            var bulletController = new BulletController(_config.BulletCfg, _poolService);
+            var bulletController = new BulletController(_config.BulletCfg, poolService);
+            var marchingSquaresController = new MarchingSquaresController();
 
             var playerInitialization = sceneInitializations.PlayerInitialization;
             var hudInitialization = sceneInitializations.HudInitialization;
+            var levelInitialization = sceneInitializations.LevelInitialization;
             
             sceneControllers.InputController = new InputController();
+            sceneControllers.LevelGeneratorController = new LevelGeneratorController(levelInitialization, _config.LevelCfg, marchingSquaresController);
             sceneControllers.SpriteAnimatorController = new SpriteAnimatorController();
-            sceneControllers.EmitterController = new EmitterController<BulletController>(sceneViews, bulletController, _poolService);
+            sceneControllers.EmitterController = new EmitterController<BulletController>(bulletController, poolService);
 
             sceneControllers.HudController = new HudController(playerInitialization, hudInitialization);
             sceneControllers.CameraController = new CameraController(playerInitialization, _config.PlayerCfg);
             sceneControllers.PlayerController = new PlayerController(playerInitialization, _config.PlayerCfg);
             sceneControllers.PlayerMovementController = new PlayerMovementController(playerInitialization, sceneControllers.SpriteAnimatorController, _config.PlayerCfg);
 
-            sceneControllers.EnemyController = new EnemyController(sceneViews, playerInitialization);
-            sceneControllers.CoinController = new CoinController(sceneViews, sceneControllers.SpriteAnimatorController, _config.CoinAnimCfg);
-            sceneControllers.CannonController = new CannonController(sceneViews, playerInitialization);
-            sceneControllers.DamagerController = new DamagerController(sceneViews);
-            sceneControllers.LevelChangerController = new LevelChangerController(sceneViews);
+            sceneControllers.EnemyController = new EnemyController(playerInitialization);
+            sceneControllers.CoinController = new CoinController(sceneControllers.SpriteAnimatorController, _config.CoinAnimCfg);
+            sceneControllers.CannonController = new CannonController( playerInitialization);
+            sceneControllers.DamagerController = new DamagerController();
+            sceneControllers.LevelChangerController = new LevelChangerController();
 
             return sceneControllers;
         }
@@ -93,6 +107,7 @@ namespace Code
         private void AddControllers(SceneControllers sceneControllers)
         {
             _controllers.Add(sceneControllers.InputController);
+            _controllers.Add(sceneControllers.LevelGeneratorController);
             _controllers.Add(sceneControllers.SpriteAnimatorController);
             _controllers.Add(sceneControllers.EmitterController);
             
@@ -112,6 +127,7 @@ namespace Code
         {
             _controllers.Add(sceneInitializations.HudInitialization);
             _controllers.Add(sceneInitializations.PlayerInitialization);
+            _controllers.Add(sceneInitializations.LevelInitialization);
         }
     }
 
@@ -128,6 +144,7 @@ namespace Code
     internal struct SceneControllers
     {
         public InputController InputController;
+        public LevelGeneratorController LevelGeneratorController;
         public SpriteAnimatorController SpriteAnimatorController;
         public EmitterController<BulletController> EmitterController;
 
@@ -146,7 +163,15 @@ namespace Code
     internal struct SceneInitializations
     {
         public InputInitialization InputInitialization;
+        public LevelInitialization LevelInitialization;
         public PlayerInitialization PlayerInitialization;
         public HudInitialization HudInitialization;
+    }
+    
+    internal struct SceneFactories
+    {
+        public PlayerFactory PlayerFactory;
+        public HudFactory HudFactory;
+        public LevelFactory LevelFactory;
     }
 }

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f67780033dc14d3ea362e7f921f4aa08, type: 3}
   m_Name: HudCfg
   m_EditorClassIdentifier: 
-  _prefabPath: Assets/Prefabs/HUD.prefab
+  _prefabPath: Assets/Prefabs/Resources/HUD.prefab

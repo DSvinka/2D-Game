@@ -17,7 +17,7 @@ namespace Code.Utils
 
         public static T[] Increase<T>(this T[] values, int increment)
         {
-            T[] array = new T[values.Length + increment];
+            var array = new T[values.Length + increment];
             values.CopyTo(array, 0);
             return array;
         }
@@ -86,7 +86,7 @@ namespace Code.Utils
             var index = 0;
             var length = nodes.Length;
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 var distanceToNode = (destination + nodes[i]).sqrMagnitude;
                 if (!(nearestDistance > distanceToNode)) continue;

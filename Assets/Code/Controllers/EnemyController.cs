@@ -7,6 +7,7 @@ using Code.Models;
 using Code.Views;
 using Pathfinding;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
@@ -18,14 +19,13 @@ namespace Code.Controllers
 
         private const float DISTANCE_THRESHOLD = 0.2f;
 
-        public EnemyController(SceneViews sceneViews, PlayerInitialization playerInitialization)
+        public EnemyController(PlayerInitialization playerInitialization)
         {
             _playerInitialization = playerInitialization;
             _enemyModels = new Dictionary<int, EnemyModel>();
-            Setup(sceneViews);
         }
         
-        private void Setup(SceneViews sceneViews)
+        public void Setup(SceneViews sceneViews)
         {
             var enemyViews = sceneViews.EnemyViews;
             foreach (var enemyView in enemyViews)
@@ -47,7 +47,6 @@ namespace Code.Controllers
                 _enemyModels.Add(enemyModel.GameObject.GetInstanceID(), enemyModel);
             }
         }
-
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
@@ -69,7 +68,13 @@ namespace Code.Controllers
         {
             foreach (var enemyModel in _enemyModels)
             {
-                enemyModel.Value.EnemyView.OnStay -= OnPlayerStay;
+                var value = enemyModel.Value;
+
+                if (value != null && value.GameObject != null)
+                {
+                    value.EnemyView.OnStay -= OnPlayerStay;
+                    Object.Destroy(value.GameObject);
+                }
             }
             _enemyModels.Clear();
         }

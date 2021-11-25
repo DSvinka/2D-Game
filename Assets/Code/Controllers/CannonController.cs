@@ -13,14 +13,13 @@ namespace Code.Controllers
 
         private PlayerModel _playerModel;
 
-        public CannonController(SceneViews sceneViews, PlayerInitialization playerInitialization)
+        public CannonController(PlayerInitialization playerInitialization)
         {
             _playerInitialization = playerInitialization;
             _cannonModels = new List<CannonModel>();
-            Setup(sceneViews);
         }
 
-        private void Setup(SceneViews sceneViews)
+        public void Setup(SceneViews sceneViews)
         {
             var cannonViews = sceneViews.CannonViews;
             foreach (var cannonView in cannonViews)
@@ -40,7 +39,6 @@ namespace Code.Controllers
                 });
             }
         }
-
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
@@ -69,6 +67,12 @@ namespace Code.Controllers
 
         public void Cleanup()
         {
+            foreach (var cannonModel in _cannonModels)
+            {
+                if (cannonModel != null && cannonModel.GameObject != null)
+                    Object.Destroy(cannonModel.GameObject);
+            }
+
             _cannonModels.Clear();
         }
     }

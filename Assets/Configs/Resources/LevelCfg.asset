@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 724e8ea866d241a28c9128c60f6c3543, type: 3}
   m_Name: LevelCfg
   m_EditorClassIdentifier: 
-  _prefabPath: 
-  _groundTile: {fileID: 0}
-  _mapWidth: 0
-  _mapHeight: 0
-  _borders: 0
-  _fillPercent: 0
-  _smoothFactor: 0
+  _prefabPath: Assets/Prefabs/Resources/Grid.prefab
+  _groundTile: {fileID: 11400000, guid: e94f744552954de4ba637ee3fc21dee1, type: 2}
+  _mapWidth: 200
+  _mapHeight: 200
+  _borders: 1
+  _fillPercent: 51
+  _smoothFactor: 30

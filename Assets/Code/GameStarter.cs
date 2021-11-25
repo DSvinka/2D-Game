@@ -11,9 +11,12 @@ namespace Code
         private void Start()
         {
             _controllers = new GameControllers();
-            var gameInitialization = new GameInitialization(_controllers, _config);
             
-            _controllers.Initialization();
+            var gameInitialization = new GameInitialization(_controllers, _config);
+            gameInitialization.Initialization();
+            var sceneViews = gameInitialization.GetSceneViews();
+            
+            _controllers.Setup(sceneViews);
             _controllers.Start();
         }
 

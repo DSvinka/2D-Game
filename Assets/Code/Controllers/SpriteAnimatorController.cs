@@ -93,6 +93,7 @@ namespace Code.Controllers
             }
         }
 
+        public void Setup(SceneViews sceneViews) { }
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();

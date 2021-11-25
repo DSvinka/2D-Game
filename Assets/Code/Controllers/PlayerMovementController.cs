@@ -45,6 +45,7 @@ namespace Code.Controllers
 
         #endregion
 
+        public void Setup(SceneViews sceneViews) { }
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();

@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Code.Interfaces.Controllers;
+using JetBrains.Annotations;
 
 namespace Code
 {
     internal sealed class GameControllers : IStart, IUpdate, ILateUpdate, ICleanup
     {
         private readonly List<IStart> _initializeControllers;
-        private readonly List<IUpdate> _executeControllers;
+        private readonly List<IUpdate> _updateControllers;
         private readonly List<ILateUpdate> _lateControllers;
         private readonly List<ICleanup> _cleanupControllers;
 
@@ -16,9 +18,12 @@ namespace Code
         internal GameControllers()
         {
             _initializeControllers = new List<IStart>(8);
-            _executeControllers = new List<IUpdate>(8);
+            _updateControllers = new List<IUpdate>(8);
             _lateControllers = new List<ILateUpdate>(8);
             _cleanupControllers = new List<ICleanup>(8);
+            
+            _initializations = new List<IInitialization>(8);
+            _controllers = new List<IController>(8);
         }
 
         public void Add(IController controller)
@@ -30,7 +35,7 @@ namespace Code
 
             if (controller is IUpdate updateController)
             {
-                _executeControllers.Add(updateController);
+                _updateControllers.Add(updateController);
             }
 
             if (controller is ILateUpdate lateUpdateController)
@@ -51,6 +56,19 @@ namespace Code
             _initializations.Add(initialization);
         }
 
+        public void Setup(SceneViews sceneViews)
+        {
+            for (var index = 0; index < _controllers.Count; ++index)
+            {
+                _controllers[index].Setup(sceneViews);
+            }
+            
+            for (var index = 0; index < _initializations.Count; ++index)
+            {
+                _initializations[index].Initialization();
+            }
+        }
+        
         public void Restart(SceneViews sceneViews)
         {
             for (var index = 0; index < _controllers.Count; ++index)
@@ -64,14 +82,6 @@ namespace Code
             }
         }
 
-        public void Initialization()
-        {
-            for (var index = 0; index < _initializations.Count; ++index)
-            {
-                _initializations[index].Initialization();
-            }
-        }
-
         public void Start()
         {
             for (var index = 0; index < _initializeControllers.Count; ++index)
@@ -82,9 +92,9 @@ namespace Code
 
         public void Update(float deltaTime)
         {
-            for (var index = 0; index < _executeControllers.Count; ++index)
+            for (var index = 0; index < _updateControllers.Count; ++index)
             {
-                _executeControllers[index].Update(deltaTime);
+                _updateControllers[index].Update(deltaTime);
             }
         }
 

@@ -6,6 +6,7 @@ using Code.Managers;
 using Code.Models;
 using Code.Views;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
@@ -13,13 +14,12 @@ namespace Code.Controllers
     {
         private readonly Dictionary<int, DamagerModel> _damagers;
 
-        public DamagerController(SceneViews sceneViews)
+        public DamagerController()
         {
             _damagers = new Dictionary<int, DamagerModel>();
-            Setup(sceneViews);
         }
         
-        private void Setup(SceneViews sceneViews)
+        public void Setup(SceneViews sceneViews)
         {
             var damagerViews = sceneViews.DamagerViews;
             foreach (var damagerView in damagerViews)
@@ -37,7 +37,6 @@ namespace Code.Controllers
                 _damagers.Add(damagerModel.GameObject.GetInstanceID(), damagerModel);
             }
         }
-
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
@@ -70,20 +69,27 @@ namespace Code.Controllers
         {
             foreach (var damager in _damagers)
             {
-                switch (damager.Value.TriggerType)
+                var value = damager.Value;
+                
+                if (value == null || value.GameObject == null)
+                    continue;
+                    
+                switch (value.TriggerType)
                 {
                     case TriggerManager.Stay:
-                        damager.Value.DamagerView.OnStay -= OnTrapStay;
+                        value.DamagerView.OnStay -= OnTrapStay;
                         break;
                     case TriggerManager.Enter:
-                        damager.Value.DamagerView.OnEnter -= OnTrapEnter;
+                        value.DamagerView.OnEnter -= OnTrapEnter;
                         break;
                     case TriggerManager.Exit:
-                        damager.Value.DamagerView.OnExit -= OnTrapExit;
+                        value.DamagerView.OnExit -= OnTrapExit;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(damager.Value.TriggerType), $"{damager.Value.TriggerType} не предусмотрен в этом коде");
                 };
+                
+                Object.Destroy(value.GameObject);
             }
             _damagers.Clear();
         }

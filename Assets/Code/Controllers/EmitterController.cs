@@ -2,7 +2,7 @@
 using Code.Interfaces.Controllers;
 using Code.Models;
 using Code.Utils.Modules;
-using Code.Views;
+using UnityEngine;
 
 namespace Code.Controllers
 {
@@ -12,15 +12,14 @@ namespace Code.Controllers
         private T _objectsController;
         private PoolService _poolService;
 
-        public EmitterController(SceneViews sceneViews, T objectsController, PoolService poolService)
+        public EmitterController(T objectsController, PoolService poolService)
         {
             _emitterModels = new List<EmitterModel<T>>();
             _objectsController = objectsController;
             _poolService = poolService;
-            Setup(sceneViews);
         }
 
-        private void Setup(SceneViews sceneViews)
+        public void Setup(SceneViews sceneViews)
         {
             var emitterViews = sceneViews.EmitterViews;
             foreach (var emitterView in emitterViews)
@@ -38,7 +37,6 @@ namespace Code.Controllers
                 });
             }
         }
-
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
@@ -64,6 +62,12 @@ namespace Code.Controllers
 
         public void Cleanup()
         {
+            foreach (var emitterModel in _emitterModels)
+            {
+                if (emitterModel != null && emitterModel.GameObject != null)
+                    Object.Destroy(emitterModel.GameObject);
+            }
+                
             _emitterModels.Clear();
         }
     }

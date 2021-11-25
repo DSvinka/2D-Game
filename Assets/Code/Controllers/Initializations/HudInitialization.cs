@@ -9,13 +9,11 @@ namespace Code.Controllers.Initializations
     internal sealed class HudInitialization: IInitialization
     {
         private readonly HudFactory _hudFactory;
-        private readonly HudConfig _hudConfig;
-        
+
         private HudView _hudView;
 
-        public HudInitialization(HudConfig hudConfig, HudFactory hudFactory)
+        public HudInitialization(HudFactory hudFactory)
         {
-            _hudConfig = hudConfig;
             _hudFactory = hudFactory;
         }
         

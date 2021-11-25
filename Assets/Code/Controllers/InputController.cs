@@ -14,6 +14,7 @@ namespace Code.Controllers
             KeysInput.Run.GetKey();
         }
 
+        public void Setup(SceneViews sceneViews) { }
         public void ReSetup(SceneViews sceneViews) { }
     }
 }

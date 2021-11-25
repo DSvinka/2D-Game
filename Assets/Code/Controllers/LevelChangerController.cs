@@ -4,6 +4,7 @@ using Code.Interfaces.Controllers;
 using Code.Managers;
 using Code.Views;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
@@ -11,20 +12,18 @@ namespace Code.Controllers
     {
         private readonly Dictionary<int, LevelChangerView> _levelChangers;
 
-        public LevelChangerController(SceneViews sceneViews)
+        public LevelChangerController()
         {
             _levelChangers = new Dictionary<int, LevelChangerView>();
-            Setup(sceneViews);
         }
         
-        private void Setup(SceneViews sceneViews)
+        public void Setup(SceneViews sceneViews)
         {
             foreach (var changer in sceneViews.LevelChangerViews)
             {
                 _levelChangers.Add(changer.gameObject.GetInstanceID(), changer);
             }
         }
-
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
@@ -51,6 +50,10 @@ namespace Code.Controllers
         {
             foreach (var changer in _levelChangers)
             {
+                var value = changer.Value;
+                if (value == null || value.gameObject == null)
+                    continue;
+
                 switch (changer.Value.TriggerType)
                 {
                     case TriggerManager.Stay:
@@ -59,6 +62,7 @@ namespace Code.Controllers
                     default:
                         throw new ArgumentOutOfRangeException(nameof(changer.Value.TriggerType), $"{changer.Value.TriggerType} не предусмотрен в этом коде");
                 };
+                Object.Destroy(value.gameObject);
             }
             _levelChangers.Clear();
         }

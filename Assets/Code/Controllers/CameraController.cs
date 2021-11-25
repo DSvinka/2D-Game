@@ -21,6 +21,7 @@ namespace Code.Controllers
             _config = config;
         }
 
+        public void Setup(SceneViews sceneViews) { }
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
@@ -44,7 +45,7 @@ namespace Code.Controllers
 
         public void Cleanup()
         {
-            if (_camera.GameObject != null)
+            if (_camera != null && _camera.GameObject != null)
                 Object.Destroy(_camera.GameObject);
         }
     }

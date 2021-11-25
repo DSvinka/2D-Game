@@ -14,16 +14,15 @@ namespace Code.Controllers
         private SpriteAnimatorConfig _spriteAnimatorConfig;
         private Dictionary<int, CoinView> _coinViews;
 
-        public CoinController(SceneViews sceneViews, SpriteAnimatorController spriteAnimatorController, SpriteAnimatorConfig spriteAnimatorConfig)
+        public CoinController(SpriteAnimatorController spriteAnimatorController, SpriteAnimatorConfig spriteAnimatorConfig)
         {
             _spriteAnimatorController = spriteAnimatorController;
             _spriteAnimatorConfig = spriteAnimatorConfig;
 
             _coinViews = new Dictionary<int, CoinView>();
-            Setup(sceneViews);
         }
 
-        private void Setup(SceneViews sceneViews)
+        public void Setup(SceneViews sceneViews)
         {
             var coinViews = sceneViews.CoinViews;
             foreach (var coin in coinViews)
@@ -31,7 +30,6 @@ namespace Code.Controllers
                 _coinViews.Add(coin.gameObject.GetInstanceID(), coin);
             }
         }
-
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
@@ -68,23 +66,23 @@ namespace Code.Controllers
 
         private void DestroyCoin(CoinView coinView, bool destroy = false)
         {
-            if (coinView != null)
+            if (coinView == null || coinView.gameObject == null) 
+                return;
+            
+            var gameObject = coinView.gameObject;
+            
+            _spriteAnimatorController.StopAnimation(coinView.GetComponent<SpriteRenderer>());
+                
+            coinView.OnEnter -= OnCoinPickup;
+                
+            if (destroy)
             {
-                var gameObject = coinView.gameObject;
-                
-                _spriteAnimatorController.StopAnimation(coinView.GetComponent<SpriteRenderer>());
-                
-                coinView.OnEnter -= OnCoinPickup;
-                
-                if (destroy)
-                {
-                    Object.Destroy(gameObject);
-                }
-                else
-                {
-                    gameObject.SetActive(false);
-                    _coinViews.Remove(gameObject.GetInstanceID());
-                }
+                Object.Destroy(gameObject);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                _coinViews.Remove(gameObject.GetInstanceID());
             }
         }
     }

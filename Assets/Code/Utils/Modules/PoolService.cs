@@ -29,6 +29,7 @@ namespace Code.Utils.Modules
             _cache[poolModel.GameObject.name].Push(poolModel); 
         }
 
+        public void Setup(SceneViews sceneViews) { }
         public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
