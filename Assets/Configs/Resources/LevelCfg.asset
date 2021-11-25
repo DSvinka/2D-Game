@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: LevelCfg
   m_EditorClassIdentifier: 
   _prefabPath: Assets/Prefabs/Resources/Grid.prefab
-  _groundTile: {fileID: 11400000, guid: e94f744552954de4ba637ee3fc21dee1, type: 2}
+  _tiles:
+    WinterTile: {fileID: 11400000, guid: 3335435c0ea71ae408ef6cc0c5d092ef, type: 2}
+    GrassTile: {fileID: 11400000, guid: fc5c7055424b64c4aaa745a43de9afcd, type: 2}
+    DirtTile: {fileID: 11400000, guid: e94f744552954de4ba637ee3fc21dee1, type: 2}
   _mapWidth: 200
   _mapHeight: 200
   _borders: 1
-  _fillPercent: 51
-  _smoothFactor: 30
+  _fillPercent: 48
+  _smoothFactor: 41
