@@ -1,6 +1,7 @@
 ﻿using System;
 using Code.Configs;
 using Code.Factory;
+using Code.Interfaces.Controllers;
 using Code.Models;
 using Code.Utils;
 using UnityEngine;
@@ -8,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.Controllers.Initializations
 {
-    internal sealed class PlayerInitialization
+    internal sealed class PlayerInitialization: IInitialization
     {
         private readonly PlayerFactory _playerFactory;
         private readonly PlayerConfig _config;
@@ -21,15 +22,20 @@ namespace Code.Controllers.Initializations
             _config = config;
             _playerFactory = playerFactory;
         }
-
-        public void Initialization()
+        
+        public void ReInitialization()
         {
             if (_player != null && _player.GameObject != null)
                 Object.Destroy(_player.GameObject);
             
             if (_camera != null && _camera.GameObject != null)
                 Object.Destroy(_camera.GameObject);
-            
+
+            Initialization();
+        }
+
+        public void Initialization()
+        {
             var view = _playerFactory.CreatePlayer();
             if (!view.TryGetComponent(out Collider2D collider))
                 throw new Exception("Компонент Collider2D не найден на объекте PlayerView");

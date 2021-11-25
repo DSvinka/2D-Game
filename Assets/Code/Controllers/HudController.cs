@@ -20,7 +20,7 @@ namespace Code.Controllers
             _hudInitialization = hudInitialization;
         }
 
-        public void ReSetup()
+        public void ReSetup(SceneViews sceneViews)
         {
             Start();
         }

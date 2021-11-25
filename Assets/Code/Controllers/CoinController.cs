@@ -14,27 +14,28 @@ namespace Code.Controllers
         private SpriteAnimatorConfig _spriteAnimatorConfig;
         private Dictionary<int, CoinView> _coinViews;
 
-        public CoinController(IEnumerable<CoinView> coinViews, SpriteAnimatorController spriteAnimatorController, SpriteAnimatorConfig spriteAnimatorConfig)
+        public CoinController(SceneViews sceneViews, SpriteAnimatorController spriteAnimatorController, SpriteAnimatorConfig spriteAnimatorConfig)
         {
             _spriteAnimatorController = spriteAnimatorController;
             _spriteAnimatorConfig = spriteAnimatorConfig;
 
             _coinViews = new Dictionary<int, CoinView>();
-            Setup(coinViews);
+            Setup(sceneViews);
         }
 
-        private void Setup(IEnumerable<CoinView> coinViews)
+        private void Setup(SceneViews sceneViews)
         {
+            var coinViews = sceneViews.CoinViews;
             foreach (var coin in coinViews)
             {
                 _coinViews.Add(coin.gameObject.GetInstanceID(), coin);
             }
         }
 
-        public void ReSetup(IEnumerable<CoinView> coinViews)
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Setup(coinViews);
+            Setup(sceneViews);
             Start();
         }
         

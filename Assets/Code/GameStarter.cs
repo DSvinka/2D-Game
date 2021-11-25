@@ -12,6 +12,8 @@ namespace Code
         {
             _controllers = new GameControllers();
             var gameInitialization = new GameInitialization(_controllers, _config);
+            
+            _controllers.Initialization();
             _controllers.Start();
         }
 

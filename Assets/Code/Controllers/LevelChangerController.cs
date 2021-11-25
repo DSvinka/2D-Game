@@ -11,24 +11,24 @@ namespace Code.Controllers
     {
         private readonly Dictionary<int, LevelChangerView> _levelChangers;
 
-        public LevelChangerController(IEnumerable<LevelChangerView> levelChangersViews)
+        public LevelChangerController(SceneViews sceneViews)
         {
             _levelChangers = new Dictionary<int, LevelChangerView>();
-            Setup(levelChangersViews);
+            Setup(sceneViews);
         }
         
-        private void Setup(IEnumerable<LevelChangerView> levelChangersViews)
+        private void Setup(SceneViews sceneViews)
         {
-            foreach (var changer in levelChangersViews)
+            foreach (var changer in sceneViews.LevelChangerViews)
             {
                 _levelChangers.Add(changer.gameObject.GetInstanceID(), changer);
             }
         }
 
-        public void ReSetup(IEnumerable<LevelChangerView> levelChangersViews)
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Setup(levelChangersViews);
+            Setup(sceneViews);
             Start();
         }
 

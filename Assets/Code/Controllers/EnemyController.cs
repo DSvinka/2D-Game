@@ -18,15 +18,16 @@ namespace Code.Controllers
 
         private const float DISTANCE_THRESHOLD = 0.2f;
 
-        public EnemyController(PlayerInitialization playerInitialization, IEnumerable<EnemyView> enemyViews)
+        public EnemyController(SceneViews sceneViews, PlayerInitialization playerInitialization)
         {
             _playerInitialization = playerInitialization;
             _enemyModels = new Dictionary<int, EnemyModel>();
-            Setup(enemyViews);
+            Setup(sceneViews);
         }
         
-        private void Setup(IEnumerable<EnemyView> enemyViews)
+        private void Setup(SceneViews sceneViews)
         {
+            var enemyViews = sceneViews.EnemyViews;
             foreach (var enemyView in enemyViews)
             {
                 var enemyModel = new EnemyModel()
@@ -47,10 +48,10 @@ namespace Code.Controllers
             }
         }
 
-        public void ReSetup(IEnumerable<EnemyView> enemyViews)
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Setup(enemyViews);
+            Setup(sceneViews);
             Start();
         }
         

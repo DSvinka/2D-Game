@@ -21,7 +21,7 @@ namespace Code.Controllers
             _config = playerConfig;
         }
         
-        public void ReSetup()
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
             Start();

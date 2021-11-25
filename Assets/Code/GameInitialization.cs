@@ -13,142 +13,140 @@ namespace Code
         private GameControllers _controllers;
         private ConfigStore _config;
 
-        // Initialization
-        private InputInitialization _inputInitialization;
-        private PlayerInitialization _playerInitialization;
-        private HudInitialization _hudInitialization;
-        
-        // Controllers
-        private InputController _inputController;
-        private SpriteAnimatorController _spriteAnimatorController;
-
-        private HudController _hudController;
-        private CameraController _cameraController;
-        private PlayerController _playerController;
-        private PlayerMovementController _playerMovementController;
-
-        private CoinController _coinController;
-        private BulletController _bulletController;
-        private EmitterController<BulletController> _emitterController;
-
-        private EnemyController _enemyController;
-        private DamagerController _damagerController;
-        private CannonController _cannonController;
-        private LevelChangerController _levelChangerController;
-        
         // Factory
         private PlayerFactory _playerFactory;
         private HudFactory _hudFactory;
         
         // Services
         private PoolService _poolService;
-        
-        // Views
-        private EnemyView[] _enemyViews;
-        private DamagerView[] _damagerViews;
-        private LevelChangerView[] _levelChangerViews;
-        private EmitterView[] _emitterViews;
-        private CannonView[] _cannonViews;
-        private CoinView[] _coinViews;
 
         public GameInitialization(GameControllers controllers, ConfigStore config)
         {
             _controllers = controllers;
             _config = config;
 
-            FindGameObjects();
-
             _playerFactory = new PlayerFactory(_config.PlayerCfg);
             _hudFactory = new HudFactory(_config.HudCfg);
             
             _poolService = new PoolService();
-
-            SetupInitializations();
-            SetupControllers();
             
-            SaveControllers();
+            var sceneViews = FindGameObjects();
+
+            var sceneInitializations = SetupInitializations();
+            AddInitialization(sceneInitializations);
+            
+            var sceneControllers = SetupControllers(sceneViews, sceneInitializations);
+            AddControllers(sceneControllers);
         }
 
-        private void FindGameObjects()
+        private SceneViews FindGameObjects()
         {
-            _enemyViews = Object.FindObjectsOfType<EnemyView>();
-            _damagerViews = Object.FindObjectsOfType<DamagerView>();
-            _levelChangerViews = Object.FindObjectsOfType<LevelChangerView>();
-            _emitterViews = Object.FindObjectsOfType<EmitterView>();
-            _cannonViews = Object.FindObjectsOfType<CannonView>();
-            _coinViews = Object.FindObjectsOfType<CoinView>();
+            var sceneViews = new SceneViews();
+            
+            sceneViews.EnemyViews = Object.FindObjectsOfType<EnemyView>();
+            sceneViews.DamagerViews = Object.FindObjectsOfType<DamagerView>();
+            sceneViews.LevelChangerViews = Object.FindObjectsOfType<LevelChangerView>();
+            sceneViews.EmitterViews = Object.FindObjectsOfType<EmitterView>();
+            sceneViews.CannonViews = Object.FindObjectsOfType<CannonView>();
+            sceneViews.CoinViews = Object.FindObjectsOfType<CoinView>();
+
+            return sceneViews;
         }
 
-        private void SetupInitializations()
+        private SceneInitializations SetupInitializations()
         {
-            _inputInitialization = new InputInitialization();
-            _playerInitialization = new PlayerInitialization(_config.PlayerCfg, _playerFactory);
-            _hudInitialization = new HudInitialization(_config.HudCfg, _hudFactory);
+            var sceneInitializations = new SceneInitializations();
             
-            _playerInitialization.Initialization();
-            _hudInitialization.Initialization();
+            sceneInitializations.InputInitialization = new InputInitialization();
+            sceneInitializations.PlayerInitialization = new PlayerInitialization(_config.PlayerCfg, _playerFactory);
+            sceneInitializations.HudInitialization = new HudInitialization(_config.HudCfg, _hudFactory);
+
+            return sceneInitializations;
         }
 
-        private void SetupControllers()
+        private SceneControllers SetupControllers(SceneViews sceneViews, SceneInitializations sceneInitializations)
         {
-            _inputController = new InputController();
-            _spriteAnimatorController = new SpriteAnimatorController();
+            var sceneControllers = new SceneControllers();
+            var bulletController = new BulletController(_config.BulletCfg, _poolService);
 
-            _hudController = new HudController(_playerInitialization, _hudInitialization);
-            _cameraController = new CameraController(_playerInitialization, _config.PlayerCfg);
-            _playerController = new PlayerController(_playerInitialization, _config.PlayerCfg);
-            _playerMovementController = new PlayerMovementController(_playerInitialization, _spriteAnimatorController, _config.PlayerCfg);
+            var playerInitialization = sceneInitializations.PlayerInitialization;
+            var hudInitialization = sceneInitializations.HudInitialization;
             
-            _bulletController = new BulletController(_config.BulletCfg, _poolService);
-            _emitterController = new EmitterController<BulletController>(_emitterViews, _bulletController, _poolService);
+            sceneControllers.InputController = new InputController();
+            sceneControllers.SpriteAnimatorController = new SpriteAnimatorController();
+            sceneControllers.EmitterController = new EmitterController<BulletController>(sceneViews, bulletController, _poolService);
 
-            _enemyController = new EnemyController(_playerInitialization, _enemyViews);
-            _coinController = new CoinController(_coinViews, _spriteAnimatorController, _config.CoinAnimCfg);
-            _cannonController = new CannonController(_playerInitialization, _cannonViews);
-            _damagerController = new DamagerController(_damagerViews);
-            _levelChangerController = new LevelChangerController(_levelChangerViews);
+            sceneControllers.HudController = new HudController(playerInitialization, hudInitialization);
+            sceneControllers.CameraController = new CameraController(playerInitialization, _config.PlayerCfg);
+            sceneControllers.PlayerController = new PlayerController(playerInitialization, _config.PlayerCfg);
+            sceneControllers.PlayerMovementController = new PlayerMovementController(playerInitialization, sceneControllers.SpriteAnimatorController, _config.PlayerCfg);
+
+            sceneControllers.EnemyController = new EnemyController(sceneViews, playerInitialization);
+            sceneControllers.CoinController = new CoinController(sceneViews, sceneControllers.SpriteAnimatorController, _config.CoinAnimCfg);
+            sceneControllers.CannonController = new CannonController(sceneViews, playerInitialization);
+            sceneControllers.DamagerController = new DamagerController(sceneViews);
+            sceneControllers.LevelChangerController = new LevelChangerController(sceneViews);
+
+            return sceneControllers;
         }
 
-        private void SaveControllers()
+        private void AddControllers(SceneControllers sceneControllers)
         {
-            _controllers.Add(_inputController);
-            _controllers.Add(_spriteAnimatorController);
+            _controllers.Add(sceneControllers.InputController);
+            _controllers.Add(sceneControllers.SpriteAnimatorController);
+            _controllers.Add(sceneControllers.EmitterController);
             
-            _controllers.Add(_hudController);
-            _controllers.Add(_cameraController);
-            _controllers.Add(_playerController);
-            _controllers.Add(_playerMovementController);
+            _controllers.Add(sceneControllers.HudController);
+            _controllers.Add(sceneControllers.CameraController);
+            _controllers.Add(sceneControllers.PlayerController);
+            _controllers.Add(sceneControllers.PlayerMovementController);
 
-            _controllers.Add(_emitterController);
-            
-            _controllers.Add(_enemyController);
-            _controllers.Add(_coinController);
-            _controllers.Add(_cannonController);
-            _controllers.Add(_damagerController);
-            _controllers.Add(_levelChangerController);
+            _controllers.Add(sceneControllers.CoinController);
+            _controllers.Add(sceneControllers.EnemyController);
+            _controllers.Add(sceneControllers.DamagerController);
+            _controllers.Add(sceneControllers.CannonController);
+            _controllers.Add(sceneControllers.LevelChangerController);
         }
-
-        public void ReSetupControllers()
+        
+        private void AddInitialization(SceneInitializations sceneInitializations)
         {
-            FindGameObjects();
-            
-            _playerInitialization.Initialization();
-            _hudInitialization.Initialization();
-            
-            _spriteAnimatorController.ReSetup();
-            _poolService.ReSetup();
-
-            _hudController.ReSetup();
-            _cameraController.ReSetup(_playerInitialization, _config.PlayerCfg);
-            _playerController.ReSetup();
-            _playerMovementController.ReSetup();
-            
-            _enemyController.ReSetup(_enemyViews);
-            _coinController.ReSetup(_coinViews);
-            _cannonController.ReSetup(_cannonViews);
-            _emitterController.ReSetup(_emitterViews, _bulletController);
-            _damagerController.ReSetup(_damagerViews);
-            _levelChangerController.ReSetup(_levelChangerViews);
+            _controllers.Add(sceneInitializations.HudInitialization);
+            _controllers.Add(sceneInitializations.PlayerInitialization);
         }
+    }
+
+    internal struct SceneViews
+    {
+        public EnemyView[] EnemyViews;
+        public DamagerView[] DamagerViews;
+        public LevelChangerView[] LevelChangerViews;
+        public EmitterView[] EmitterViews;
+        public CannonView[] CannonViews;
+        public CoinView[] CoinViews;
+    }
+
+    internal struct SceneControllers
+    {
+        public InputController InputController;
+        public SpriteAnimatorController SpriteAnimatorController;
+        public EmitterController<BulletController> EmitterController;
+
+        public HudController HudController;
+        public CameraController CameraController;
+        public PlayerController PlayerController;
+        public PlayerMovementController PlayerMovementController;
+
+        public CoinController CoinController;
+        public EnemyController EnemyController;
+        public DamagerController DamagerController;
+        public CannonController CannonController;
+        public LevelChangerController LevelChangerController;
+    }
+
+    internal struct SceneInitializations
+    {
+        public InputInitialization InputInitialization;
+        public PlayerInitialization PlayerInitialization;
+        public HudInitialization HudInitialization;
     }
 }

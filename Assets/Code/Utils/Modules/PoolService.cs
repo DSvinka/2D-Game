@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Code.Utils.Modules
 {
-    internal sealed class PoolService: ICleanup
+    internal sealed class PoolService: IController, ICleanup
     {
         private readonly Dictionary<string, ObjectPool> _cache;
 
@@ -29,7 +29,7 @@ namespace Code.Utils.Modules
             _cache[poolModel.GameObject.name].Push(poolModel); 
         }
 
-        public void ReSetup()
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
         }

@@ -13,5 +13,7 @@ namespace Code.Controllers
             KeysInput.Jump.GetKeyDown();
             KeysInput.Run.GetKey();
         }
+
+        public void ReSetup(SceneViews sceneViews) { }
     }
 }

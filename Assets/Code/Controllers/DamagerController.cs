@@ -13,14 +13,15 @@ namespace Code.Controllers
     {
         private readonly Dictionary<int, DamagerModel> _damagers;
 
-        public DamagerController(IEnumerable<DamagerView> damagerViews)
+        public DamagerController(SceneViews sceneViews)
         {
             _damagers = new Dictionary<int, DamagerModel>();
-            Setup(damagerViews);
+            Setup(sceneViews);
         }
         
-        private void Setup(IEnumerable<DamagerView> damagerViews)
+        private void Setup(SceneViews sceneViews)
         {
+            var damagerViews = sceneViews.DamagerViews;
             foreach (var damagerView in damagerViews)
             {
                 var damagerModel = new DamagerModel()
@@ -37,10 +38,10 @@ namespace Code.Controllers
             }
         }
 
-        public void ReSetup(IEnumerable<DamagerView> damagerViews)
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Setup(damagerViews);
+            Setup(sceneViews);
             Start();
         }
         

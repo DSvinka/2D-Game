@@ -10,6 +10,9 @@ namespace Code
         private readonly List<ILateUpdate> _lateControllers;
         private readonly List<ICleanup> _cleanupControllers;
 
+        private readonly List<IController> _controllers;
+        private readonly List<IInitialization> _initializations;
+
         internal GameControllers()
         {
             _initializeControllers = new List<IStart>(8);
@@ -18,7 +21,7 @@ namespace Code
             _cleanupControllers = new List<ICleanup>(8);
         }
 
-        internal void Add(IController controller)
+        public void Add(IController controller)
         {
             if (controller is IStart startController)
             {
@@ -38,6 +41,34 @@ namespace Code
             if (controller is ICleanup cleanupController)
             {
                 _cleanupControllers.Add(cleanupController);
+            }
+
+            _controllers.Add(controller);
+        }
+        
+        public void Add(IInitialization initialization)
+        {
+            _initializations.Add(initialization);
+        }
+
+        public void Restart(SceneViews sceneViews)
+        {
+            for (var index = 0; index < _controllers.Count; ++index)
+            {
+                _controllers[index].ReSetup(sceneViews);
+            }
+            
+            for (var index = 0; index < _initializations.Count; ++index)
+            {
+                _initializations[index].ReInitialization();
+            }
+        }
+
+        public void Initialization()
+        {
+            for (var index = 0; index < _initializations.Count; ++index)
+            {
+                _initializations[index].Initialization();
             }
         }
 
