@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Code.Controllers
 {
-    internal sealed class SpriteAnimatorController : IController, ICleanup, IUpdate
+    internal sealed class SpriteAnimatorController : Controller
     {
-        private sealed class Animation : IUpdate
+        private sealed class Animation : IExecute
         {
             public AnimState Track;
             public List<Sprite> Sprites;
@@ -17,7 +17,7 @@ namespace Code.Controllers
             public float Counter;
             public bool Sleep;
 
-            public void Update(float deltaTime)
+            public void Execute(float deltaTime)
             {
                 if (Sleep) return;
                 Counter += deltaTime * Speed;
@@ -79,13 +79,13 @@ namespace Code.Controllers
             }
         }
 
-        public void Update(float deltaTime)
+        public override void Execute(float deltaTime)
         {
             foreach (var animation in _activeAnimation)
             {
                 var value = animation.Value;
                 
-                value.Update(deltaTime);
+                value.Execute(deltaTime);
                 if (value.Counter < value.Sprites.Count)
                 {
                     animation.Key.sprite = value.Sprites[(int) value.Counter];
@@ -93,13 +93,13 @@ namespace Code.Controllers
             }
         }
 
-        public void Setup(SceneViews sceneViews) { }
-        public void ReSetup(SceneViews sceneViews)
+        public override void Setup(SceneViews sceneViews) { }
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
         }
         
-        public void Cleanup()
+        public override void Cleanup()
         {
             _activeAnimation.Clear();
         }

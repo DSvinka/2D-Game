@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Controllers
 {
-    internal sealed class HudController: IController, IStart, IUpdate, ICleanup
+    internal sealed class HudController: Controller
     {
         private readonly PlayerInitialization _playerInitialization;
         private readonly HudInitialization _hudInitialization;
@@ -19,21 +19,20 @@ namespace Code.Controllers
             _playerInitialization = playerInitialization;
             _hudInitialization = hudInitialization;
         }
-
-        public void Setup(SceneViews sceneViews) {}
-        public void ReSetup(SceneViews sceneViews)
+        
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Start();
+            Initialization();
         }
         
-        public void Start()
+        public override void Initialization()
         {
             _playerModel = _playerInitialization.GetPlayer();
             _hudView = _hudInitialization.GetHud();
         }
         
-        public void Cleanup()
+        public override void Cleanup()
         {
             if (_hudView != null && _hudView.gameObject != null)
             {
@@ -41,7 +40,7 @@ namespace Code.Controllers
             }
         }
 
-        public void Update(float deltaTime)
+        public override void Execute(float deltaTime)
         {
             _hudView.Health.text = $"HP: {_playerModel.Health}";
             _hudView.Coins.text = $"Coins: {_playerModel.Coins}";

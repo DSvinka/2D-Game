@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Code.Controllers
 {
-    internal sealed class PlayerMovementController: IController, IUpdate, ICleanup, IStart
+    internal sealed class PlayerMovementController: Controller
     {
         private PlayerInitialization _playerInitialization;
         private SpriteAnimatorController _spriteAnimatorController;
@@ -44,15 +44,14 @@ namespace Code.Controllers
         private void OnJumpInput(bool value) => _jumpInput = value;
 
         #endregion
-
-        public void Setup(SceneViews sceneViews) { }
-        public void ReSetup(SceneViews sceneViews)
+        
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Start();
+            Initialization();
         }
 
-        public void Start()
+        public override void Initialization()
         {
             _player = _playerInitialization.GetPlayer();
             _contactPooler = new ContactPooler(_player.Collider);
@@ -61,7 +60,7 @@ namespace Code.Controllers
             _jumpInputProxy.KeyOnDown += OnJumpInput;
         }
 
-        public void Cleanup()
+        public override void Cleanup()
         {
             _axisXInputProxy.AxisOnChange -= OnAxisXInput;
             _jumpInputProxy.KeyOnDown -= OnJumpInput;
@@ -69,9 +68,9 @@ namespace Code.Controllers
             _spriteAnimatorController.StopAnimation(_player.SpriteRenderer);
         }
         
-        public void Update(float deltaTime) 
+        public override void Execute(float deltaTime) 
         {
-            _contactPooler.Update(deltaTime);
+            _contactPooler.Execute(deltaTime);
             
             MoveTowards();
             Jump();

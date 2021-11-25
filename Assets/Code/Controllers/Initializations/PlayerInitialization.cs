@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.Controllers.Initializations
 {
-    internal sealed class PlayerInitialization: IInitialization
+    internal sealed class PlayerInitialization: Initializer
     {
         private readonly PlayerFactory _playerFactory;
         private readonly PlayerConfig _config;
@@ -23,18 +23,7 @@ namespace Code.Controllers.Initializations
             _playerFactory = playerFactory;
         }
         
-        public void ReInitialization()
-        {
-            if (_player != null && _player.GameObject != null)
-                Object.Destroy(_player.GameObject);
-            
-            if (_camera != null && _camera.GameObject != null)
-                Object.Destroy(_camera.GameObject);
-
-            Initialization();
-        }
-
-        public void Initialization()
+        public override void Initialization()
         {
             var view = _playerFactory.CreatePlayer();
             if (!view.TryGetComponent(out Collider2D collider))
@@ -74,6 +63,17 @@ namespace Code.Controllers.Initializations
             _camera = cameraModel;
             _camera.Transform.SetParent(null);
             _camera.Transform.position = _camera.Transform.position.Change(z: _config.CameraDistance);
+        }
+        
+        public override void ReInitialization()
+        {
+            if (_player != null && _player.GameObject != null)
+                Object.Destroy(_player.GameObject);
+            
+            if (_camera != null && _camera.GameObject != null)
+                Object.Destroy(_camera.GameObject);
+
+            Initialization();
         }
 
         public PlayerModel GetPlayer()

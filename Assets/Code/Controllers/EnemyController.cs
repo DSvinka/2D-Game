@@ -11,7 +11,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
-    internal sealed class EnemyController: IController, IStart, IUpdate, ICleanup
+    internal sealed class EnemyController: Controller
     {
         private readonly PlayerInitialization _playerInitialization;
         private readonly Dictionary<int, EnemyModel> _enemyModels;
@@ -25,7 +25,7 @@ namespace Code.Controllers
             _enemyModels = new Dictionary<int, EnemyModel>();
         }
         
-        public void Setup(SceneViews sceneViews)
+        public override void Setup(SceneViews sceneViews)
         {
             var enemyViews = sceneViews.EnemyViews;
             foreach (var enemyView in enemyViews)
@@ -47,14 +47,14 @@ namespace Code.Controllers
                 _enemyModels.Add(enemyModel.GameObject.GetInstanceID(), enemyModel);
             }
         }
-        public void ReSetup(SceneViews sceneViews)
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
             Setup(sceneViews);
-            Start();
+            Initialization();
         }
         
-        public void Start()
+        public override void Initialization()
         {
             _playerModel = _playerInitialization.GetPlayer();
             
@@ -64,7 +64,7 @@ namespace Code.Controllers
             }
         }
         
-        public void Cleanup()
+        public override void Cleanup()
         {
             foreach (var enemyModel in _enemyModels)
             {
@@ -79,7 +79,7 @@ namespace Code.Controllers
             _enemyModels.Clear();
         }
         
-        public void Update(float deltaTime)
+        public override void Execute(float deltaTime)
         {
             if (_enemyModels != null && _enemyModels.Count != 0)
             {

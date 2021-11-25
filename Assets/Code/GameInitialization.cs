@@ -10,26 +10,24 @@ namespace Code
 {
     internal sealed class GameInitialization
     {
-        private GameControllers _controllers;
+        private GameControllersManager _controllersManager;
         private ConfigStore _config;
 
-        public GameInitialization(GameControllers controllers, ConfigStore config)
+        public GameInitialization(GameControllersManager controllersManager, ConfigStore config)
         {
-            _controllers = controllers;
+            _controllersManager = controllersManager;
             _config = config;
         }
 
         public void Initialization()
         {
             var poolService = new PoolService();
-            
-            var sceneViews = FindGameObjects();
             var sceneFactories = SetupFactories();
 
             var sceneInitializations = SetupInitializations(sceneFactories);
             AddInitialization(sceneInitializations);
             
-            var sceneControllers = SetupControllers(sceneViews, sceneInitializations, poolService);
+            var sceneControllers = SetupControllers(sceneInitializations, poolService);
             AddControllers(sceneControllers);
         }
 
@@ -75,7 +73,7 @@ namespace Code
             return sceneInitializations;
         }
 
-        private SceneControllers SetupControllers(SceneViews sceneViews, SceneInitializations sceneInitializations, PoolService poolService)
+        private SceneControllers SetupControllers(SceneInitializations sceneInitializations, PoolService poolService)
         {
             var sceneControllers = new SceneControllers();
             var bulletController = new BulletController(_config.BulletCfg, poolService);
@@ -106,28 +104,28 @@ namespace Code
 
         private void AddControllers(SceneControllers sceneControllers)
         {
-            _controllers.Add(sceneControllers.InputController);
-            _controllers.Add(sceneControllers.LevelGeneratorController);
-            _controllers.Add(sceneControllers.SpriteAnimatorController);
-            _controllers.Add(sceneControllers.EmitterController);
+            _controllersManager.Add(sceneControllers.InputController);
+            _controllersManager.Add(sceneControllers.LevelGeneratorController);
+            _controllersManager.Add(sceneControllers.SpriteAnimatorController);
+            _controllersManager.Add(sceneControllers.EmitterController);
             
-            _controllers.Add(sceneControllers.HudController);
-            _controllers.Add(sceneControllers.CameraController);
-            _controllers.Add(sceneControllers.PlayerController);
-            _controllers.Add(sceneControllers.PlayerMovementController);
+            _controllersManager.Add(sceneControllers.HudController);
+            _controllersManager.Add(sceneControllers.CameraController);
+            _controllersManager.Add(sceneControllers.PlayerController);
+            _controllersManager.Add(sceneControllers.PlayerMovementController);
 
-            _controllers.Add(sceneControllers.CoinController);
-            _controllers.Add(sceneControllers.EnemyController);
-            _controllers.Add(sceneControllers.DamagerController);
-            _controllers.Add(sceneControllers.CannonController);
-            _controllers.Add(sceneControllers.LevelChangerController);
+            _controllersManager.Add(sceneControllers.CoinController);
+            _controllersManager.Add(sceneControllers.EnemyController);
+            _controllersManager.Add(sceneControllers.DamagerController);
+            _controllersManager.Add(sceneControllers.CannonController);
+            _controllersManager.Add(sceneControllers.LevelChangerController);
         }
         
         private void AddInitialization(SceneInitializations sceneInitializations)
         {
-            _controllers.Add(sceneInitializations.HudInitialization);
-            _controllers.Add(sceneInitializations.PlayerInitialization);
-            _controllers.Add(sceneInitializations.LevelInitialization);
+            _controllersManager.Add(sceneInitializations.HudInitialization);
+            _controllersManager.Add(sceneInitializations.PlayerInitialization);
+            _controllersManager.Add(sceneInitializations.LevelInitialization);
         }
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Controllers.Initializations
 {
-    internal sealed class LevelInitialization: IInitialization
+    internal sealed class LevelInitialization: Initializer
     {
         private readonly LevelFactory _levelFactory;
 
@@ -17,18 +17,18 @@ namespace Code.Controllers.Initializations
             _levelFactory = levelFactory;
         }
         
-        public void ReInitialization()
+        public override void Initialization()
+        {
+            var view = _levelFactory.CreateLevel();
+            _levelView = view;
+        }
+        
+        public override void ReInitialization()
         {
             if (_levelView != null && _levelView.gameObject != null)
                 Object.Destroy(_levelView.gameObject);
             
             Initialization();
-        }
-
-        public void Initialization()
-        {
-            var view = _levelFactory.CreateLevel();
-            _levelView = view;
         }
 
         public LevelView GetLevel()

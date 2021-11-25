@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Code.Utils.Modules
 {
-    internal sealed class ContactPooler: IUpdate
+    internal sealed class ContactPooler: IExecute
     {
         private ContactPoint2D[] _contacts = new ContactPoint2D[10];
 
@@ -20,7 +20,7 @@ namespace Code.Utils.Modules
             _collider2D = collider;
         }
 
-        public void Update(float deltaTime)
+        public void Execute(float deltaTime)
         {
             IsGrounded = false;
             HasLeftContact = false;

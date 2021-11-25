@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
-    internal sealed class LevelChangerController: IController, IStart, ICleanup
+    internal sealed class LevelChangerController: Controller
     {
         private readonly Dictionary<int, LevelChangerView> _levelChangers;
 
@@ -17,21 +17,21 @@ namespace Code.Controllers
             _levelChangers = new Dictionary<int, LevelChangerView>();
         }
         
-        public void Setup(SceneViews sceneViews)
+        public override void Setup(SceneViews sceneViews)
         {
             foreach (var changer in sceneViews.LevelChangerViews)
             {
                 _levelChangers.Add(changer.gameObject.GetInstanceID(), changer);
             }
         }
-        public void ReSetup(SceneViews sceneViews)
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
             Setup(sceneViews);
-            Start();
+            Initialization();
         }
 
-        public void Start()
+        public override void Initialization()
         {
             foreach (var changer in _levelChangers)
             {
@@ -46,7 +46,7 @@ namespace Code.Controllers
             }
         }
 
-        public void Cleanup()
+        public override void Cleanup()
         {
             foreach (var changer in _levelChangers)
             {

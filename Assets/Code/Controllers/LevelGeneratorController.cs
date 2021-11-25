@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Code.Controllers
 {
-    internal sealed class LevelGeneratorController: IController, IStart, ICleanup
+    internal sealed class LevelGeneratorController: Controller
     {
         private MarchingSquaresController _marchingSquaresController;
         private LevelInitialization _levelInitialization;
@@ -27,15 +27,14 @@ namespace Code.Controllers
 
             _map = new TileType[_levelGeneratorConfig.MapWidth, _levelGeneratorConfig.MapHeight];
         }
-
-        public void Setup(SceneViews sceneViews) { }
-        public void ReSetup(SceneViews sceneViews)
+        
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Start();
+            Initialization();
         }
         
-        public void Start()
+        public override void Initialization()
         {
             _levelView = _levelInitialization.GetLevel();
             
@@ -49,7 +48,7 @@ namespace Code.Controllers
 
         }
 
-        public void Cleanup()
+        public override void Cleanup()
         {
             if (_levelView != null && _levelView.gameObject != null)
                 Object.Destroy(_levelView.gameObject);

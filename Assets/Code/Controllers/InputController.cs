@@ -3,9 +3,9 @@ using Code.Interfaces.Controllers;
 
 namespace Code.Controllers
 {
-    internal sealed class InputController : IController, IUpdate
+    internal sealed class InputController : Controller
     {
-        public void Update(float deltaTime)
+        public override void Execute(float deltaTime)
         {
             AxisInput.Horizontal.GetAxis();
 
@@ -13,8 +13,5 @@ namespace Code.Controllers
             KeysInput.Jump.GetKeyDown();
             KeysInput.Run.GetKey();
         }
-
-        public void Setup(SceneViews sceneViews) { }
-        public void ReSetup(SceneViews sceneViews) { }
     }
 }

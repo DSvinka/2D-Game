@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
-    internal sealed class PlayerController: IController, IStart, ICleanup
+    internal sealed class PlayerController: Controller
     {
         private PlayerInitialization _playerInitialization;
         private PlayerConfig _config;
@@ -20,15 +20,14 @@ namespace Code.Controllers
             _playerInitialization = playerInitialization;
             _config = playerConfig;
         }
-
-        public void Setup(SceneViews sceneViews) { }
-        public void ReSetup(SceneViews sceneViews)
+        
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Start();
+            Initialization();
         }
         
-        public void Start()
+        public override void Initialization()
         {
             _player = _playerInitialization.GetPlayer();
 
@@ -38,7 +37,7 @@ namespace Code.Controllers
             view.OnPickup += Pickup;
         }
 
-        public void Cleanup()
+        public override void Cleanup()
         {
             if (_player != null && _player.GameObject != null)
             {

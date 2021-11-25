@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Controllers
 {
-    internal sealed class CannonController : IController, IUpdate, IStart, ICleanup
+    internal sealed class CannonController : Controller
     {
         private readonly List<CannonModel> _cannonModels;
         private readonly PlayerInitialization _playerInitialization;
@@ -19,7 +19,7 @@ namespace Code.Controllers
             _cannonModels = new List<CannonModel>();
         }
 
-        public void Setup(SceneViews sceneViews)
+        public override void Setup(SceneViews sceneViews)
         {
             var cannonViews = sceneViews.CannonViews;
             foreach (var cannonView in cannonViews)
@@ -39,19 +39,19 @@ namespace Code.Controllers
                 });
             }
         }
-        public void ReSetup(SceneViews sceneViews)
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
             Setup(sceneViews);
-            Start();
+            Initialization();
         }
         
-        public void Start()
+        public override void Initialization()
         {
             _playerModel = _playerInitialization.GetPlayer();
         }
 
-        public void Update(float deltaTime)
+        public override void Execute(float deltaTime)
         {
             for (var index = 0; index < _cannonModels.Count; index++)
             {
@@ -65,7 +65,7 @@ namespace Code.Controllers
             }
         }
 
-        public void Cleanup()
+        public override void Cleanup()
         {
             foreach (var cannonModel in _cannonModels)
             {

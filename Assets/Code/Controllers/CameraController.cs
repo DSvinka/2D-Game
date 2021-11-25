@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
-    internal sealed class CameraController: IController, IUpdate, IStart, ICleanup
+    internal sealed class CameraController: Controller
     {
         private PlayerInitialization _playerInitialization;
         private PlayerConfig _config;
@@ -20,21 +20,20 @@ namespace Code.Controllers
             _playerInitialization = playerInitialization;
             _config = config;
         }
-
-        public void Setup(SceneViews sceneViews) { }
-        public void ReSetup(SceneViews sceneViews)
+        
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Start();
+            Initialization();
         }
         
-        public void Start()
+        public override void Initialization()
         {
             _player = _playerInitialization.GetPlayer();
             _camera = _playerInitialization.GetCamera();
         }
 
-        public void Update(float deltaTime)
+        public override void Execute(float deltaTime)
         {
             var playerPosition = _player.Transform.position;
             var cameraPosition = _camera.Transform.position;
@@ -43,7 +42,7 @@ namespace Code.Controllers
             _camera.Transform.position = Vector3.Lerp(cameraPosition, new Vector3(playerPosition.x + offset.x, playerPosition.y + offset.y, cameraPosition.z), _config.CameraSpeed);
         }
 
-        public void Cleanup()
+        public override void Cleanup()
         {
             if (_camera != null && _camera.GameObject != null)
                 Object.Destroy(_camera.GameObject);

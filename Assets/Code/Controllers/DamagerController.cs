@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
-    internal sealed class DamagerController: IController, IStart, ICleanup, IUpdate
+    internal sealed class DamagerController: Controller
     {
         private readonly Dictionary<int, DamagerModel> _damagers;
 
@@ -19,7 +19,7 @@ namespace Code.Controllers
             _damagers = new Dictionary<int, DamagerModel>();
         }
         
-        public void Setup(SceneViews sceneViews)
+        public override void Setup(SceneViews sceneViews)
         {
             var damagerViews = sceneViews.DamagerViews;
             foreach (var damagerView in damagerViews)
@@ -37,14 +37,14 @@ namespace Code.Controllers
                 _damagers.Add(damagerModel.GameObject.GetInstanceID(), damagerModel);
             }
         }
-        public void ReSetup(SceneViews sceneViews)
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
             Setup(sceneViews);
-            Start();
+            Initialization();
         }
         
-        public void Start()
+        public override void Initialization()
         {
             foreach (var damager in _damagers)
             {
@@ -65,7 +65,7 @@ namespace Code.Controllers
             }
         }
         
-        public void Cleanup()
+        public override void Cleanup()
         {
             foreach (var damager in _damagers)
             {
@@ -94,7 +94,7 @@ namespace Code.Controllers
             _damagers.Clear();
         }
         
-        public void Update(float deltaTime)
+        public override void Execute(float deltaTime)
         {
             if (_damagers != null && _damagers.Count != 0)
             {

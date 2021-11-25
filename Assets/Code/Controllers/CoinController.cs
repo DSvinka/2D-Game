@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
-    internal sealed class CoinController: IController, ICleanup, IStart
+    internal sealed class CoinController: Controller
     {
         private SpriteAnimatorController _spriteAnimatorController;
         private SpriteAnimatorConfig _spriteAnimatorConfig;
@@ -22,7 +22,7 @@ namespace Code.Controllers
             _coinViews = new Dictionary<int, CoinView>();
         }
 
-        public void Setup(SceneViews sceneViews)
+        public override void Setup(SceneViews sceneViews)
         {
             var coinViews = sceneViews.CoinViews;
             foreach (var coin in coinViews)
@@ -30,14 +30,14 @@ namespace Code.Controllers
                 _coinViews.Add(coin.gameObject.GetInstanceID(), coin);
             }
         }
-        public void ReSetup(SceneViews sceneViews)
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
             Setup(sceneViews);
-            Start();
+            Initialization();
         }
         
-        public void Start()
+        public override void Initialization()
         {
             foreach (var coinView in _coinViews)
             {
@@ -46,7 +46,7 @@ namespace Code.Controllers
             }
         }
         
-        public void Cleanup()
+        public override void Cleanup()
         {
             foreach (var coinView in _coinViews)
                 DestroyCoin(coinView.Value, true);
