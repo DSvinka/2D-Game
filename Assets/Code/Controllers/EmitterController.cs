@@ -2,24 +2,26 @@
 using Code.Interfaces.Controllers;
 using Code.Models;
 using Code.Utils.Modules;
-using Code.Views;
+using UnityEngine;
 
 namespace Code.Controllers
 {
     internal sealed class EmitterController<T> : IController, IUpdate, ICleanup where T : IEmitter
     {
         private List<EmitterModel<T>> _emitterModels;
+        private T _objectsController;
         private PoolService _poolService;
 
-        public EmitterController(EmitterView[] emitterViews, T objectsController, PoolService poolService)
+        public EmitterController(T objectsController, PoolService poolService)
         {
             _emitterModels = new List<EmitterModel<T>>();
+            _objectsController = objectsController;
             _poolService = poolService;
-            Setup(emitterViews, objectsController);
         }
 
-        private void Setup(EmitterView[] emitterViews, T objectsController)
+        public void Setup(SceneViews sceneViews)
         {
+            var emitterViews = sceneViews.EmitterViews;
             foreach (var emitterView in emitterViews)
             {
                 _emitterModels.Add(new EmitterModel<T>()
@@ -27,7 +29,7 @@ namespace Code.Controllers
                     GameObject = emitterView.gameObject,
                     Transform = emitterView.transform,
 
-                    Controller = objectsController,
+                    Controller = _objectsController,
 
                     Cooldown = 0,
                     Force = emitterView.Force,
@@ -35,11 +37,10 @@ namespace Code.Controllers
                 });
             }
         }
-
-        public void ReSetup(EmitterView[] emitterViews, T objectsController)
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Setup(emitterViews, objectsController);
+            Setup(sceneViews);
         }
 
         public void Update(float deltaTime)
@@ -61,6 +62,12 @@ namespace Code.Controllers
 
         public void Cleanup()
         {
+            foreach (var emitterModel in _emitterModels)
+            {
+                if (emitterModel != null && emitterModel.GameObject != null)
+                    Object.Destroy(emitterModel.GameObject);
+            }
+                
             _emitterModels.Clear();
         }
     }

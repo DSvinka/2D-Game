@@ -2,7 +2,6 @@
 using Code.Controllers.Initializations;
 using Code.Interfaces.Controllers;
 using Code.Models;
-using Code.Views;
 using UnityEngine;
 
 namespace Code.Controllers
@@ -14,15 +13,15 @@ namespace Code.Controllers
 
         private PlayerModel _playerModel;
 
-        public CannonController(PlayerInitialization playerInitialization, CannonView[] cannonViews)
+        public CannonController(PlayerInitialization playerInitialization)
         {
             _playerInitialization = playerInitialization;
             _cannonModels = new List<CannonModel>();
-            Setup(cannonViews);
         }
 
-        private void Setup(CannonView[] cannonViews)
+        public void Setup(SceneViews sceneViews)
         {
+            var cannonViews = sceneViews.CannonViews;
             foreach (var cannonView in cannonViews)
             {
                 _cannonModels.Add(new CannonModel()
@@ -40,11 +39,10 @@ namespace Code.Controllers
                 });
             }
         }
-
-        public void ReSetup(CannonView[] cannonViews)
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Setup(cannonViews);
+            Setup(sceneViews);
             Start();
         }
         
@@ -69,6 +67,12 @@ namespace Code.Controllers
 
         public void Cleanup()
         {
+            foreach (var cannonModel in _cannonModels)
+            {
+                if (cannonModel != null && cannonModel.GameObject != null)
+                    Object.Destroy(cannonModel.GameObject);
+            }
+
             _cannonModels.Clear();
         }
     }

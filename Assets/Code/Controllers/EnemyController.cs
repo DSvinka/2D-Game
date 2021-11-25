@@ -7,6 +7,7 @@ using Code.Models;
 using Code.Views;
 using Pathfinding;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Code.Controllers
 {
@@ -18,15 +19,15 @@ namespace Code.Controllers
 
         private const float DISTANCE_THRESHOLD = 0.2f;
 
-        public EnemyController(PlayerInitialization playerInitialization, IEnumerable<EnemyView> enemyViews)
+        public EnemyController(PlayerInitialization playerInitialization)
         {
             _playerInitialization = playerInitialization;
             _enemyModels = new Dictionary<int, EnemyModel>();
-            Setup(enemyViews);
         }
         
-        private void Setup(IEnumerable<EnemyView> enemyViews)
+        public void Setup(SceneViews sceneViews)
         {
+            var enemyViews = sceneViews.EnemyViews;
             foreach (var enemyView in enemyViews)
             {
                 var enemyModel = new EnemyModel()
@@ -46,11 +47,10 @@ namespace Code.Controllers
                 _enemyModels.Add(enemyModel.GameObject.GetInstanceID(), enemyModel);
             }
         }
-
-        public void ReSetup(IEnumerable<EnemyView> enemyViews)
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Setup(enemyViews);
+            Setup(sceneViews);
             Start();
         }
         
@@ -68,7 +68,13 @@ namespace Code.Controllers
         {
             foreach (var enemyModel in _enemyModels)
             {
-                enemyModel.Value.EnemyView.OnStay -= OnPlayerStay;
+                var value = enemyModel.Value;
+
+                if (value != null && value.GameObject != null)
+                {
+                    value.EnemyView.OnStay -= OnPlayerStay;
+                    Object.Destroy(value.GameObject);
+                }
             }
             _enemyModels.Clear();
         }

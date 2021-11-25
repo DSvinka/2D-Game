@@ -2,6 +2,7 @@
 {
     internal interface IController
     {
-        
+        void Setup(SceneViews sceneViews);
+        void ReSetup(SceneViews sceneViews);
     }
 }

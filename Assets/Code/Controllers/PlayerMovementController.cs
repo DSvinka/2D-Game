@@ -27,9 +27,7 @@ namespace Code.Controllers
             _playerInitialization = playerInitialization;
             _spriteAnimatorController = spriteAnimatorController;
             _config = playerConfig;
-            
-            Setup();
-            
+
             _axisXInputProxy = AxisInput.Horizontal;
             _jumpInputProxy = KeysInput.Jump;
         }
@@ -47,18 +45,13 @@ namespace Code.Controllers
 
         #endregion
 
-        public void ReSetup()
+        public void Setup(SceneViews sceneViews) { }
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
-            Setup();
             Start();
         }
-        
-        private void Setup()
-        {
-            
-        }
-        
+
         public void Start()
         {
             _player = _playerInitialization.GetPlayer();

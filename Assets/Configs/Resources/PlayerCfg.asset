@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4d5dff68774a6aa91f8cb8c454e3b1, type: 3}
   m_Name: PlayerCfg
   m_EditorClassIdentifier: 
-  _playerPrefabPath: Assets/Prefabs/Player.prefab
-  _cameraPrefabPath: Assets/Prefabs/Camera.prefab
+  _playerPrefabPath: Assets/Prefabs/Resources/Player.prefab
+  _cameraPrefabPath: Assets/Prefabs/Resources/Camera.prefab
   _spriteAnimatorCfgPath: Assets/Configs/Resources/PlayerAnimCfg.asset
   _maxHealth: 500
   _jumpForce: 7

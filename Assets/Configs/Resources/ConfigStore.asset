@@ -16,3 +16,4 @@ MonoBehaviour:
   _hudCfgPath: Assets/Configs/Resources/HudCfg.asset
   _bulletCfgPath: Assets/Configs/Resources/BulletCfg.asset
   _coinAnimCfgPath: Assets/Configs/Resources/CoinAnimCfg.asset
+  _levelCfgPath: Assets/Configs/Resources/LevelCfg.asset

@@ -20,8 +20,9 @@ namespace Code.Controllers
             _playerInitialization = playerInitialization;
             _config = playerConfig;
         }
-        
-        public void ReSetup()
+
+        public void Setup(SceneViews sceneViews) { }
+        public void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
             Start();
@@ -39,13 +40,15 @@ namespace Code.Controllers
 
         public void Cleanup()
         {
-            var view = _player.View;
-            if (view != null)
+            if (_player != null && _player.GameObject != null)
             {
-                view.OnHealing -= AddHealth;
-                view.OnDamage -= AddDamage;
-                view.OnPickup -= Pickup;
-                Object.Destroy(view);
+                if (_player.View != null)
+                {
+                    _player.View.OnHealing -= AddHealth;
+                    _player.View.OnDamage -= AddDamage;
+                    _player.View.OnPickup -= Pickup;
+                }
+                Object.Destroy(_player.GameObject);
             }
         }
 
