@@ -7,16 +7,16 @@ namespace Code.Factory
 {
     internal sealed class LevelFactory
     {
-        private readonly LevelConfig _levelConfig;
+        private readonly LevelGeneratorConfig _levelGeneratorConfig;
 
-        public LevelFactory(LevelConfig levelConfig)
+        public LevelFactory(LevelGeneratorConfig levelGeneratorConfig)
         {
-            _levelConfig = levelConfig;
+            _levelGeneratorConfig = levelGeneratorConfig;
         }
 
         public LevelView CreateLevel()
         {
-            var gameObject = Object.Instantiate(_levelConfig.Prefab);
+            var gameObject = Object.Instantiate(_levelGeneratorConfig.Prefab);
             if (!gameObject.TryGetComponent(out LevelView view))
                 throw new Exception("У префаба интерфейса не найден компонент LevelView!");
             return view;

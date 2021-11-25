@@ -1,16 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 using static Code.Utils.DataUtils;
 
 namespace Code.Configs
 {
-    [CreateAssetMenu(fileName = "LevelCfg", menuName = "Configs/Level Cfg", order = 1)]
-    internal sealed class LevelConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "LevelGenCfg", menuName = "Configs/Level Gen Cfg", order = 1)]
+    internal sealed class LevelGeneratorConfig : ScriptableObject
     {
         [SerializeField] [AssetPath.Attribute(typeof(GameObject))] 
         private string _prefabPath;
 
-        [SerializeField] private Tile _groundTile;
+        [SerializeField] private Tiles _tiles;
         [SerializeField] private int _mapWidth;
         [SerializeField] private int _mapHeight;
         [SerializeField] private bool _borders;
@@ -21,12 +22,20 @@ namespace Code.Configs
         private GameObject _prefab;
 
         public GameObject Prefab => GetData(_prefabPath, _prefab);
-        public Tile GroundTile => _groundTile;
+        public Tiles Tiles => _tiles;
         public int MapWidth => _mapWidth;
         public int MapHeight => _mapHeight;
         public bool Borders => _borders;
         
         public int FillPercent => _fillPercent;
         public int SmoothFactor => _smoothFactor;
+    }
+
+    [Serializable]
+    internal struct Tiles
+    {
+        public Tile WinterTile;
+        public Tile GrassTile;
+        public Tile DirtTile;
     }
 }

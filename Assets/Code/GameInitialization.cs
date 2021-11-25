@@ -58,7 +58,7 @@ namespace Code
             
             sceneFactories.HudFactory = new HudFactory(_config.HudCfg);
             sceneFactories.PlayerFactory = new PlayerFactory(_config.PlayerCfg);
-            sceneFactories.LevelFactory = new LevelFactory(_config.LevelCfg);
+            sceneFactories.LevelFactory = new LevelFactory(_config.LevelGeneratorCfg);
 
             return sceneFactories;
         }
@@ -86,7 +86,7 @@ namespace Code
             var levelInitialization = sceneInitializations.LevelInitialization;
             
             sceneControllers.InputController = new InputController();
-            sceneControllers.LevelGeneratorController = new LevelGeneratorController(levelInitialization, _config.LevelCfg, marchingSquaresController);
+            sceneControllers.LevelGeneratorController = new LevelGeneratorController(levelInitialization, _config.LevelGeneratorCfg, marchingSquaresController);
             sceneControllers.SpriteAnimatorController = new SpriteAnimatorController();
             sceneControllers.EmitterController = new EmitterController<BulletController>(bulletController, poolService);
 

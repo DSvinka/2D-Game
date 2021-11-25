@@ -13,19 +13,19 @@ namespace Code.Controllers
         private LevelInitialization _levelInitialization;
         
         private LevelView _levelView;
-        private LevelConfig _levelConfig;
+        private LevelGeneratorConfig _levelGeneratorConfig;
 
-        private int[,] _map;
+        private TileType[,] _map;
         
         private int _countWall = 4;
 
-        public LevelGeneratorController(LevelInitialization levelInitialization, LevelConfig levelConfig, MarchingSquaresController marchingSquaresController)
+        public LevelGeneratorController(LevelInitialization levelInitialization, LevelGeneratorConfig levelGeneratorConfig, MarchingSquaresController marchingSquaresController)
         {
-            _levelConfig = levelConfig;
+            _levelGeneratorConfig = levelGeneratorConfig;
             _levelInitialization = levelInitialization;
             _marchingSquaresController = marchingSquaresController;
 
-            _map = new int[_levelConfig.MapWidth, _levelConfig.MapHeight];
+            _map = new TileType[_levelGeneratorConfig.MapWidth, _levelGeneratorConfig.MapHeight];
         }
 
         public void Setup(SceneViews sceneViews) { }
@@ -41,11 +41,11 @@ namespace Code.Controllers
             
             RandomFillMap();
 
-            for (var i = 0; i < _levelConfig.SmoothFactor; i++)
+            for (var i = 0; i < _levelGeneratorConfig.SmoothFactor; i++)
                 SmoothMap();
   
             _marchingSquaresController.GenerateGrid(_map, 1);
-            _marchingSquaresController.DrawTilesOnMap(_levelView.Tilemap, _levelConfig.GroundTile);
+            _marchingSquaresController.DrawTilesOnMap(_levelView.Tilemap, _levelGeneratorConfig.Tiles);
 
         }
 
@@ -60,20 +60,20 @@ namespace Code.Controllers
             var seed = Time.time.ToString(CultureInfo.InvariantCulture);
             var random = new System.Random(seed.GetHashCode());
             
-            for (var x = 0; x < _levelConfig.MapWidth; x++)
+            for (var x = 0; x < _levelGeneratorConfig.MapWidth; x++)
             {
-                for (var y = 0; y < _levelConfig.MapHeight; y++)
+                for (var y = 0; y < _levelGeneratorConfig.MapHeight; y++)
                 {
-                    if (x == 0 || y == _levelConfig.MapWidth - 1 || y == 0 || y == _levelConfig.MapHeight - 1)
+                    if (x == 0 || y == _levelGeneratorConfig.MapWidth - 1 || y == 0 || y == _levelGeneratorConfig.MapHeight - 1)
                     {
-                        if (_levelConfig.Borders)
+                        if (_levelGeneratorConfig.Borders)
                         {
-                            _map[x, y] = 1;
+                            _map[x, y] = TileType.Dirt;
                         }
                     }
                     else
                     {
-                        _map[x, y] = (random.Next(0, 100) < _levelConfig.FillPercent) ? 1 : 0;
+                        _map[x, y] = (random.Next(0, 100) < _levelGeneratorConfig.FillPercent) ? TileType.Dirt : TileType.Air;
                     }
                 }
             }
@@ -81,19 +81,24 @@ namespace Code.Controllers
 
         private void SmoothMap()
         {
-            for (var x = 0; x < _levelConfig.MapWidth; x++)
+            for (var x = 0; x < _levelGeneratorConfig.MapWidth; x++)
             {
-                for (var y = 0; y < _levelConfig.MapHeight; y++)
+                for (var y = 0; y < _levelGeneratorConfig.MapHeight; y++)
                 {
                     var neighbourWall = GetWallCount(x, y);
 
                     if (neighbourWall > _countWall)
                     {
-                        _map[x, y] = 1;
+                        if (y+1 < _levelGeneratorConfig.MapHeight && _map[x, y+1] == TileType.Air)
+                            _map[x, y] = TileType.Grass;
+                        else if (y+1 >= _levelGeneratorConfig.MapHeight)
+                            _map[x, y] = TileType.Winter;
+                        else
+                            _map[x, y] = TileType.Dirt;
                     }
                     else if (neighbourWall < _countWall)
                     {
-                        _map[x, y] = 0;
+                        _map[x, y] = TileType.Air;
                     }
                 }
             }
@@ -107,11 +112,11 @@ namespace Code.Controllers
             {
                 for (var gridY = y-1; gridY <= y+1; gridY++)
                 {
-                    if (gridX >= 0 && gridX < _levelConfig.MapWidth && gridY >= 0 && gridY < _levelConfig.MapHeight)
+                    if (gridX >= 0 && gridX < _levelGeneratorConfig.MapWidth && gridY >= 0 && gridY < _levelGeneratorConfig.MapHeight)
                     {
                         if (gridX != x || gridY != y)
                         {
-                            wallCount += _map[gridX, gridY];
+                            wallCount += _map[gridX, gridY] == TileType.Air ? 0 : 1;
                         }
                     }
                     else
@@ -123,5 +128,13 @@ namespace Code.Controllers
 
             return wallCount;
         }
+    }
+
+    public enum TileType
+    {
+        Air = 0,
+        Dirt = 1,
+        Grass = 2,
+        Winter = 3,
     }
 }

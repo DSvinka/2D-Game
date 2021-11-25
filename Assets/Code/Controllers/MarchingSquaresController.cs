@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Code.Configs;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace Code.Controllers
@@ -7,39 +9,52 @@ namespace Code.Controllers
     {
         private SquareGrid _squareGrid;
         private Tilemap _tileMap;
-        private Tile _tileGround;
+        private Tiles _tiles;
 
-        public void GenerateGrid(int[,] map, float squareSize)
+        public void GenerateGrid(TileType[,] map, float squareSize)
         {
             _squareGrid = new SquareGrid(map, squareSize);
         }
 
-        public void DrawTilesOnMap(Tilemap tileMap, Tile tileGround)
+        public void DrawTilesOnMap(Tilemap tileMap, Tiles tiles)
         {
             if (_squareGrid == null)
                 return;
 
             _tileMap = tileMap;
-            _tileGround = tileGround;
+            _tiles = tiles;
 
             for (var x = 0; x < _squareGrid.Squares.GetLength(0); x++)
             {
                 for (var y = 0; y < _squareGrid.Squares.GetLength(1); y++)
                 {
-                    DrawTileInControlNode(_squareGrid.Squares[x, y].TopLeft.Active, _squareGrid.Squares[x, y].TopLeft.Position);
-                    DrawTileInControlNode(_squareGrid.Squares[x, y].TopRight.Active, _squareGrid.Squares[x, y].TopRight.Position);
-                    DrawTileInControlNode(_squareGrid.Squares[x, y].BottomRight.Active, _squareGrid.Squares[x, y].BottomRight.Position);
-                    DrawTileInControlNode(_squareGrid.Squares[x, y].BottomLeft.Active, _squareGrid.Squares[x, y].BottomLeft.Position);
+                    DrawTileInControlNode(_squareGrid.Squares[x, y].TopLeft.TileType, _squareGrid.Squares[x, y].TopLeft.Position);
+                    DrawTileInControlNode(_squareGrid.Squares[x, y].TopRight.TileType, _squareGrid.Squares[x, y].TopRight.Position);
+                    DrawTileInControlNode(_squareGrid.Squares[x, y].BottomRight.TileType, _squareGrid.Squares[x, y].BottomRight.Position);
+                    DrawTileInControlNode(_squareGrid.Squares[x, y].BottomLeft.TileType, _squareGrid.Squares[x, y].BottomLeft.Position);
                 }
             }
         }
 
-        private void DrawTileInControlNode(bool active, Vector3 position)
+        private void DrawTileInControlNode(TileType tileType, Vector3 position)
         {
-            if (active)
+            var positionTile = new Vector3Int((int) position.x, (int) position.y, 0);
+            
+            switch (tileType)
             {
-                var positionTile = new Vector3Int((int) position.x, (int) position.y, 0);
-                _tileMap.SetTile(positionTile, _tileGround);
+                case TileType.Dirt:
+                    _tileMap.SetTile(positionTile, _tiles.DirtTile);
+                    break;
+                case TileType.Grass:
+                    _tileMap.SetTile(positionTile, _tiles.GrassTile);
+                    break;
+                case TileType.Winter:
+                    _tileMap.SetTile(positionTile, _tiles.WinterTile);
+                    break;
+                case TileType.Air:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(tileType), $"{tileType} не предусмотрен в этом коде!");
             }
         }
     }
@@ -48,19 +63,19 @@ namespace Code.Controllers
     {
         public Vector3 Position;
 
-        public Node(Vector3 _pos)
+        public Node(Vector3 position)
         {
-            Position = _pos;
+            Position = position;
         }
     }
       
     public class ControlNode : Node
     {
-        public bool Active;
+        public TileType TileType;
 
-        public ControlNode(Vector3 pos, bool active) : base(pos)
+        public ControlNode(Vector3 position, TileType tileType) : base(position)
         {
-            Active = active;
+            TileType = tileType;
         }
     }
 
@@ -81,7 +96,7 @@ namespace Code.Controllers
     {
         public Square[,] Squares;
 
-        public SquareGrid(int[,] map, float squareSize)
+        public SquareGrid(TileType[,] map, float squareSize)
         {
             var nodeCountX = map.GetLength(0);
             var nodeCountY = map.GetLength(1);
@@ -96,7 +111,7 @@ namespace Code.Controllers
                 for (var y = 0; y < nodeCountY; y++)
                 {
                     var position = new Vector3(-mapWidth/2 + x * squareSize + squareSize/2, -mapHeight/2 + y * squareSize + squareSize/2);
-                    controlNodes[x,y] =new ControlNode(position, map[x,y] == 1);
+                    controlNodes[x,y] = new ControlNode(position, map[x,y]);
                 }
             }
 
