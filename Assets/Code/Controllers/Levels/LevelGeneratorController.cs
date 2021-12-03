@@ -18,6 +18,8 @@ namespace Code.Controllers.Levels
         
         private int _countWall = 4;
 
+        private const int SEED = 372029326;
+
         public LevelGeneratorController(LevelInitialization levelInitialization, LevelGeneratorConfig levelGeneratorConfig, MarchingSquaresController marchingSquaresController)
         {
             _levelGeneratorConfig = levelGeneratorConfig;
@@ -55,9 +57,9 @@ namespace Code.Controllers.Levels
 
         private void RandomFillMap()
         {
-            var seed = Time.time.ToString(CultureInfo.InvariantCulture);
-            var random = new System.Random(seed.GetHashCode());
-            
+            // var seed = Time.time.ToString(CultureInfo.InvariantCulture);
+            var random = new System.Random(SEED); //(seed.GetHashCode());
+
             for (var x = 0; x < _levelGeneratorConfig.MapWidth; x++)
             {
                 for (var y = 0; y < _levelGeneratorConfig.MapHeight; y++)
