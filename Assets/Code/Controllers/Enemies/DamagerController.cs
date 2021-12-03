@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.Interfaces.Controllers;
 using Code.Interfaces.Views;
 using Code.Managers;
 using Code.Models;
-using Code.Views;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Code.Controllers
+namespace Code.Controllers.Enemies
 {
     internal sealed class DamagerController: Controller
     {

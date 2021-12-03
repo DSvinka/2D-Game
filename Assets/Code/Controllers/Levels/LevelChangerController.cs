@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.Interfaces.Controllers;
 using Code.Managers;
 using Code.Views;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Code.Controllers
+namespace Code.Controllers.Levels
 {
     internal sealed class LevelChangerController: Controller
     {

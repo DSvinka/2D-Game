@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Code.Controllers.Initializations;
-using Code.Interfaces.Controllers;
 using Code.Managers;
 using Code.Models;
 using Code.Views;
@@ -9,7 +8,7 @@ using Pathfinding;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Code.Controllers
+namespace Code.Controllers.Enemies
 {
     internal sealed class EnemyController: Controller
     {

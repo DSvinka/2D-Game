@@ -1,11 +1,10 @@
 ﻿using System.Globalization;
 using Code.Configs;
 using Code.Controllers.Initializations;
-using Code.Interfaces.Controllers;
 using Code.Views;
 using UnityEngine;
 
-namespace Code.Controllers
+namespace Code.Controllers.Levels
 {
     internal sealed class LevelGeneratorController: Controller
     {

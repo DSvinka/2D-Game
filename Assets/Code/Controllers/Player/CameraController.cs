@@ -1,11 +1,10 @@
 ﻿using Code.Configs;
 using Code.Controllers.Initializations;
-using Code.Interfaces.Controllers;
 using Code.Models;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Code.Controllers
+namespace Code.Controllers.Player
 {
     internal sealed class CameraController: Controller
     {

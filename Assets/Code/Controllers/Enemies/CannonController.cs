@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using Code.Controllers.Initializations;
-using Code.Interfaces.Controllers;
 using Code.Models;
 using UnityEngine;
 
-namespace Code.Controllers
+namespace Code.Controllers.Enemies
 {
     internal sealed class CannonController : Controller
     {

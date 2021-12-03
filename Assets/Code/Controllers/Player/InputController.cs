@@ -1,7 +1,6 @@
 using Code.Input.Inputs;
-using Code.Interfaces.Controllers;
 
-namespace Code.Controllers
+namespace Code.Controllers.Player
 {
     internal sealed class InputController : Controller
     {

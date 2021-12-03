@@ -3,7 +3,7 @@ using Code.Configs;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Code.Controllers
+namespace Code.Controllers.Levels
 {
     internal sealed class MarchingSquaresController
     {

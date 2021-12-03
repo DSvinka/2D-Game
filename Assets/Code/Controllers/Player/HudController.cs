@@ -1,10 +1,9 @@
 ﻿using Code.Controllers.Initializations;
-using Code.Interfaces.Controllers;
 using Code.Models;
 using Code.Views;
 using UnityEngine;
 
-namespace Code.Controllers
+namespace Code.Controllers.Player
 {
     internal sealed class HudController: Controller
     {

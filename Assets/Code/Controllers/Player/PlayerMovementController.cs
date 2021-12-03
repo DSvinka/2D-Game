@@ -1,7 +1,6 @@
 ﻿using Code.Configs;
 using Code.Controllers.Initializations;
 using Code.Input.Inputs;
-using Code.Interfaces.Controllers;
 using Code.Interfaces.Input;
 using Code.Managers;
 using Code.Models;
@@ -9,7 +8,7 @@ using Code.Utils;
 using Code.Utils.Modules;
 using UnityEngine;
 
-namespace Code.Controllers
+namespace Code.Controllers.Player
 {
     internal sealed class PlayerMovementController: Controller
     {
