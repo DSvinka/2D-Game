@@ -3,6 +3,5 @@
     internal interface IInitialization
     {
         void Initialization();
-        void ReInitialization();
     }
 }

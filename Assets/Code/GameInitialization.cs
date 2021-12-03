@@ -1,6 +1,11 @@
-﻿using Code.Configs;
+﻿using System.Collections.Generic;
+using Code.Configs;
 using Code.Controllers;
+using Code.Controllers.Enemies;
 using Code.Controllers.Initializations;
+using Code.Controllers.Levels;
+using Code.Controllers.Player;
+using Code.Controllers.Quests;
 using Code.Factory;
 using Code.Utils.Modules;
 using Code.Views;
@@ -10,26 +15,24 @@ namespace Code
 {
     internal sealed class GameInitialization
     {
-        private GameControllers _controllers;
+        private GameControllersManager _controllersManager;
         private ConfigStore _config;
 
-        public GameInitialization(GameControllers controllers, ConfigStore config)
+        public GameInitialization(GameControllersManager controllersManager, ConfigStore config)
         {
-            _controllers = controllers;
+            _controllersManager = controllersManager;
             _config = config;
         }
 
         public void Initialization()
         {
             var poolService = new PoolService();
-            
-            var sceneViews = FindGameObjects();
             var sceneFactories = SetupFactories();
 
             var sceneInitializations = SetupInitializations(sceneFactories);
             AddInitialization(sceneInitializations);
             
-            var sceneControllers = SetupControllers(sceneViews, sceneInitializations, poolService);
+            var sceneControllers = SetupControllers(sceneInitializations, poolService);
             AddControllers(sceneControllers);
         }
 
@@ -48,6 +51,8 @@ namespace Code
             sceneViews.EmitterViews = Object.FindObjectsOfType<EmitterView>();
             sceneViews.CannonViews = Object.FindObjectsOfType<CannonView>();
             sceneViews.CoinViews = Object.FindObjectsOfType<CoinView>();
+            sceneViews.QuestView = Object.FindObjectOfType<QuestView>();
+            sceneViews.QuestDoorViews = Object.FindObjectsOfType<QuestDoorView>();
 
             return sceneViews;
         }
@@ -75,7 +80,7 @@ namespace Code
             return sceneInitializations;
         }
 
-        private SceneControllers SetupControllers(SceneViews sceneViews, SceneInitializations sceneInitializations, PoolService poolService)
+        private SceneControllers SetupControllers(SceneInitializations sceneInitializations, PoolService poolService)
         {
             var sceneControllers = new SceneControllers();
             var bulletController = new BulletController(_config.BulletCfg, poolService);
@@ -97,37 +102,42 @@ namespace Code
 
             sceneControllers.EnemyController = new EnemyController(playerInitialization);
             sceneControllers.CoinController = new CoinController(sceneControllers.SpriteAnimatorController, _config.CoinAnimCfg);
-            sceneControllers.CannonController = new CannonController( playerInitialization);
+            sceneControllers.CannonController = new CannonController(playerInitialization);
             sceneControllers.DamagerController = new DamagerController();
             sceneControllers.LevelChangerController = new LevelChangerController();
+            sceneControllers.QuestConfigurator = new QuestConfiguratorController();
+            sceneControllers.QuestDoorController = new QuestDoorController();
 
             return sceneControllers;
         }
 
         private void AddControllers(SceneControllers sceneControllers)
         {
-            _controllers.Add(sceneControllers.InputController);
-            _controllers.Add(sceneControllers.LevelGeneratorController);
-            _controllers.Add(sceneControllers.SpriteAnimatorController);
-            _controllers.Add(sceneControllers.EmitterController);
+            _controllersManager.Add(sceneControllers.InputController);
+            _controllersManager.Add(sceneControllers.LevelGeneratorController);
+            _controllersManager.Add(sceneControllers.SpriteAnimatorController);
+            _controllersManager.Add(sceneControllers.EmitterController);
             
-            _controllers.Add(sceneControllers.HudController);
-            _controllers.Add(sceneControllers.CameraController);
-            _controllers.Add(sceneControllers.PlayerController);
-            _controllers.Add(sceneControllers.PlayerMovementController);
+            _controllersManager.Add(sceneControllers.HudController);
+            _controllersManager.Add(sceneControllers.CameraController);
+            _controllersManager.Add(sceneControllers.PlayerController);
+            _controllersManager.Add(sceneControllers.PlayerMovementController);
 
-            _controllers.Add(sceneControllers.CoinController);
-            _controllers.Add(sceneControllers.EnemyController);
-            _controllers.Add(sceneControllers.DamagerController);
-            _controllers.Add(sceneControllers.CannonController);
-            _controllers.Add(sceneControllers.LevelChangerController);
+            _controllersManager.Add(sceneControllers.CoinController);
+            _controllersManager.Add(sceneControllers.EnemyController);
+            _controllersManager.Add(sceneControllers.DamagerController);
+            _controllersManager.Add(sceneControllers.CannonController);
+            _controllersManager.Add(sceneControllers.LevelChangerController);
+            
+            _controllersManager.Add(sceneControllers.QuestConfigurator);
+            _controllersManager.Add(sceneControllers.QuestDoorController);
         }
         
         private void AddInitialization(SceneInitializations sceneInitializations)
         {
-            _controllers.Add(sceneInitializations.HudInitialization);
-            _controllers.Add(sceneInitializations.PlayerInitialization);
-            _controllers.Add(sceneInitializations.LevelInitialization);
+            _controllersManager.Add(sceneInitializations.HudInitialization);
+            _controllersManager.Add(sceneInitializations.PlayerInitialization);
+            _controllersManager.Add(sceneInitializations.LevelInitialization);
         }
     }
 
@@ -139,6 +149,8 @@ namespace Code
         public EmitterView[] EmitterViews;
         public CannonView[] CannonViews;
         public CoinView[] CoinViews;
+        public QuestView QuestView;
+        public QuestDoorView[] QuestDoorViews;
     }
 
     internal struct SceneControllers
@@ -158,6 +170,8 @@ namespace Code
         public DamagerController DamagerController;
         public CannonController CannonController;
         public LevelChangerController LevelChangerController;
+        public QuestConfiguratorController QuestConfigurator;
+        public QuestDoorController QuestDoorController;
     }
 
     internal struct SceneInitializations

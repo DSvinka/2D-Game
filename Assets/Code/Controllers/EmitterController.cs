@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Controllers
 {
-    internal sealed class EmitterController<T> : IController, IUpdate, ICleanup where T : IEmitter
+    internal sealed class EmitterController<T> : Controller where T : IEmitter
     {
         private List<EmitterModel<T>> _emitterModels;
         private T _objectsController;
@@ -19,7 +19,7 @@ namespace Code.Controllers
             _poolService = poolService;
         }
 
-        public void Setup(SceneViews sceneViews)
+        public override void Setup(SceneViews sceneViews)
         {
             var emitterViews = sceneViews.EmitterViews;
             foreach (var emitterView in emitterViews)
@@ -37,13 +37,13 @@ namespace Code.Controllers
                 });
             }
         }
-        public void ReSetup(SceneViews sceneViews)
+        public override void ReSetup(SceneViews sceneViews)
         {
             Cleanup();
             Setup(sceneViews);
         }
 
-        public void Update(float deltaTime)
+        public override void Execute(float deltaTime)
         {
             foreach (var emitterModel in _emitterModels)
             {
@@ -60,7 +60,7 @@ namespace Code.Controllers
             }
         }
 
-        public void Cleanup()
+        public override void Cleanup()
         {
             foreach (var emitterModel in _emitterModels)
             {

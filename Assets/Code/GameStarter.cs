@@ -6,35 +6,35 @@ namespace Code
     internal sealed class GameStarter : MonoBehaviour
     {
         [SerializeField] private ConfigStore _config;
-        private GameControllers _controllers;
+        private GameControllersManager _gameControllersManager;
 
         private void Start()
         {
-            _controllers = new GameControllers();
+            _gameControllersManager = new GameControllersManager();
             
-            var gameInitialization = new GameInitialization(_controllers, _config);
-            gameInitialization.Initialization();
+            var gameInitialization = new GameInitialization(_gameControllersManager, _config);
             var sceneViews = gameInitialization.GetSceneViews();
-            
-            _controllers.Setup(sceneViews);
-            _controllers.Start();
+            gameInitialization.Initialization();
+
+            _gameControllersManager.Setup(sceneViews);
+            _gameControllersManager.Initialization();
         }
 
         private void Update()
         {
             var deltaTime = Time.deltaTime;
-            _controllers.Update(deltaTime);
+            _gameControllersManager.Execute(deltaTime);
         }
 
         private void LateUpdate()
         {
             var deltaTime = Time.deltaTime;
-            _controllers.LateUpdate(deltaTime);
+            _gameControllersManager.LateExecute(deltaTime);
         }
 
         private void OnDestroy()
         {
-            _controllers.Cleanup();
+            _gameControllersManager.Cleanup();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Code.Controllers
             if (!bullet.GameObject.TryGetComponent(out BulletView bulletView))
                 throw new Exception("BulletView не найден в префабе пули");
             
-            // Не самый лучший вариант.
+            // TODO: Не самый лучший вариант.
             var trailRenderers = bullet.GameObject.GetComponentsInChildren<TrailRenderer>();
             if (trailRenderers.Length != 0)
             {
